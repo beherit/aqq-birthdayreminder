@@ -125,13 +125,15 @@ void __fastcall TSettingsForm::aFindContactsExecute(TObject *Sender)
 
   for(int i=0;i<FileListBox->Items->Count;i++)
   {
+    BirthDay, bYear, bMonth, bDay = NULL;
+
     FileListBox->ItemIndex=i;
 
     FileName = FileListBox->FileName;
     FileName = StringReplace(FileName, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
     TIniFile *Ini = new TIniFile(FileName);
-    BirthDay = IdDecoderMIME->DecodeToString((Ini->ReadString("Buddy", "Birth", "").c_str()));
+    BirthDay = IdDecoderMIME->DecodeToString((Ini->ReadString("Buddy", "Birth", "A===").c_str()));
     delete Ini;
 
     try
