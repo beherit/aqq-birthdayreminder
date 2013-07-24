@@ -35,7 +35,6 @@ wchar_t *AnsiTowchar_t(AnsiString Str) //zamiana AnsiString->wchar_t*
 TSettingsForm *handle; //tworzenie uchwytu do formy
 
 //utworzenie obiektow do struktur
-//PluginAction TPluginActionSkrot;
 PluginShowInfo TPluginShowInfo;
 PluginLink TPluginLink;
 PluginInfo TPluginInfo;
@@ -52,25 +51,17 @@ Word tYear,tMonth,tDay;
 Word bYear=0,bMonth=0,bDay=0;
 AnsiString BirthDay;
 
+//do porównania dat
+double DataAktualna;
+double DataKontaktu;
+int RoznicaDat=0;
+int RoznicaDatUstawienia;
+
 int Song=0;
 int TimeOut;
-//int plugin_icon_idx;
-
-//serwis szybkiego dostêpu
-//int __stdcall BirthdayReminderSettingsService (WPARAM, LPARAM)
-//{
-//  if (handle==NULL)
-//  {
-//  Application->Handle = SettingsForm;
-//  handle = new TSettingsForm(Application);
-//  handle->setPluginPath=PluginPath;
-//  handle->Show();
-//  }
-//  else
-//    handle->Show();
-//
-//  return 0;
-//}
+int SoundPlay;
+int AnotherDay;
+int InBirthDay;
 
 //Base64---------------------------------------------------------------------
 const char          fillchar = '=';
@@ -162,61 +153,195 @@ void FindContacts(String Dir, String typ)
             //b³¹d - nie rób nic
           }
 
-          if((StrToInt(bMonth)==StrToInt(tMonth))&&(StrToInt(bDay)==StrToInt(tDay)))
+          int RoznicaOk=1;
+          try
           {
-            AnsiString Nick = Base64Decode((Ini->ReadString("Buddy", "Nick", "").c_str()));
-            //poprawa BASE64
-            Nick = StringReplace(Nick, "Ä™", "ê", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Ã³", "ó", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Ä…", "¹", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Å›", "œ", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Å‚", "³", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Å¼", "¿", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Åº", "Ÿ", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Ä‡", "æ", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Å„", "ñ", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Ä˜", "Ê", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Ã“", "Ó", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Ä„", "¥", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Åš", "Œ", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Å", "£", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Å»", "¯", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Å¹", "", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Ä†", "Æ", TReplaceFlags() << rfReplaceAll);
-            Nick = StringReplace(Nick, "Åƒ", "Ñ", TReplaceFlags() << rfReplaceAll);
-            //koniec
+            DataAktualna = EncodeDate(tYear, tMonth, tDay);
+            DataKontaktu = EncodeDate(tYear, bMonth, bDay);
 
-            bYear = tYear - bYear;
+            RoznicaDat = difftime(DataAktualna, DataKontaktu);
+          }
+          catch (...)
+          {
+            //b³¹d?
+            RoznicaOk=0;
+          }
 
-            AnsiString TextTmp = Nick + " obchodzi dziœ urodziny! (" + bYear + ")";
-
-            wchar_t* Text = AnsiTowchar_t(TextTmp);
-            wchar_t* ImagePath = AnsiTowchar_t(ImagePathTmp);
-
-            TPluginShowInfo.cbSize = sizeof(PluginShowInfo);
-            TPluginShowInfo.Event = tmeInfo;
-            TPluginShowInfo.Text = Text;
-            TPluginShowInfo.ImagePath = ImagePath;
-            TPluginShowInfo.TimeOut = TimeOut;
-            //TPluginShowInfo.ActionID;
-            //TPluginShowInfo.Tick;
-            TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
-
-            if(Song==0)
+          if (InBirthDay==1)
+          {
+            if((StrToInt(bMonth)==StrToInt(tMonth))&&(StrToInt(bDay)==StrToInt(tDay)))
             {
-              if(FileExists(PluginPath + "\\\\BirthdayReminder\\\\birthday.wav"))
+              AnsiString Nick = Base64Decode((Ini->ReadString("Buddy", "Nick", "").c_str()));
+              //poprawa BASE64
+              Nick = StringReplace(Nick, "Ä™", "ê", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ã³", "ó", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ä…", "¹", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å›", "œ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å‚", "³", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å¼", "¿", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Åº", "Ÿ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ä‡", "æ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å„", "ñ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ä˜", "Ê", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ã“", "Ó", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ä„", "¥", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Åš", "Œ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å", "£", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å»", "¯", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å¹", "", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ä†", "Æ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Åƒ", "Ñ", TReplaceFlags() << rfReplaceAll);
+              //koniec
+
+              bYear = tYear - bYear;
+
+              AnsiString TextTmp = Nick + " obchodzi dziœ urodziny! (" + bYear + ")";
+
+              wchar_t* Text = AnsiTowchar_t(TextTmp);
+              wchar_t* ImagePath = AnsiTowchar_t(ImagePathTmp);
+
+              TPluginShowInfo.cbSize = sizeof(PluginShowInfo);
+              TPluginShowInfo.Event = tmeInfo;
+              TPluginShowInfo.Text = Text;
+              TPluginShowInfo.ImagePath = ImagePath;
+              TPluginShowInfo.TimeOut = TimeOut;
+              //TPluginShowInfo.ActionID;
+              //TPluginShowInfo.Tick;
+              TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
+
+              if (SoundPlay==1)
               {
-                AnsiString SoundPatch = PluginPath + "\\\\BirthdayReminder\\\\birthday.wav";
-                sndPlaySound(SoundPatch.c_str(), SND_SYNC);
-                Song=1;
-              }
-              else
-              {
-                PlaySound("ID_SONG1", HInstance, SND_ASYNC | SND_RESOURCE);
-                Song=1;
+                if(Song==0)
+                {
+                  if(FileExists(PluginPath + "\\\\BirthdayReminder\\\\birthday.wav"))
+                  {
+                    AnsiString SoundPatch = PluginPath + "\\\\BirthdayReminder\\\\birthday.wav";
+                    sndPlaySound(SoundPatch.c_str(), SND_SYNC);
+                    Song=1;
+                  }
+                  else
+                  {
+                    PlaySound("ID_SONG1", HInstance, SND_ASYNC | SND_RESOURCE);
+                    Song=1;
+                  }
+                }
               }
             }
           }
+
+          if (AnotherDay!=0)
+          {
+            if(RoznicaOk==1)
+            {
+              AnsiString Nick = Base64Decode((Ini->ReadString("Buddy", "Nick", "").c_str()));
+              //poprawa BASE64
+              Nick = StringReplace(Nick, "Ä™", "ê", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ã³", "ó", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ä…", "¹", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å›", "œ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å‚", "³", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å¼", "¿", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Åº", "Ÿ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ä‡", "æ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å„", "ñ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ä˜", "Ê", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ã“", "Ó", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ä„", "¥", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Åš", "Œ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å", "£", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å»", "¯", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Å¹", "", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Ä†", "Æ", TReplaceFlags() << rfReplaceAll);
+              Nick = StringReplace(Nick, "Åƒ", "Ñ", TReplaceFlags() << rfReplaceAll);
+              //koniec
+
+              bYear = tYear - bYear;
+              AnsiString TextTmp;
+              int eSong=0;
+
+              if (AnotherDay==1)
+                TextTmp = Nick + " obchodzi jutro urodziny! (" + bYear + ")";
+
+              if (AnotherDay==2)
+                TextTmp = Nick + " za dwa dni obchodzi urodziny! (" + bYear + ")";
+
+              if (AnotherDay==3)
+                TextTmp = Nick + " za trzy dni obchodzi urodziny! (" + bYear + ")";
+
+              if (AnotherDay==4)
+                TextTmp = Nick + " za cztery dni obchodzi urodziny! (" + bYear + ")";
+
+              if (AnotherDay==5)
+                TextTmp = Nick + " za piêæ dni obchodzi urodziny! (" + bYear + ")";
+
+              if (AnotherDay==6)
+                TextTmp = Nick + " za szeœæ dni obchodzi urodziny! (" + bYear + ")";
+
+              if (AnotherDay==7)
+                TextTmp = Nick + " za tydzieñ obchodzi urodziny! (" + bYear + ")";
+
+              if (AnotherDay==8)
+                TextTmp = Nick + " za dwa tygodnie obchodzi urodziny! (" + bYear + ")";
+
+              wchar_t* Text = AnsiTowchar_t(TextTmp);
+              wchar_t* ImagePath = AnsiTowchar_t(ImagePathTmp);
+
+              TPluginShowInfo.cbSize = sizeof(PluginShowInfo);
+              TPluginShowInfo.Event = tmeInfo;
+              TPluginShowInfo.Text = Text;
+              TPluginShowInfo.ImagePath = ImagePath;
+              TPluginShowInfo.TimeOut = TimeOut;
+              //TPluginShowInfo.ActionID;
+              //TPluginShowInfo.Tick;
+              if ((RoznicaDat==-1)&&(AnotherDay==1))
+                TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
+
+              else if ((RoznicaDat==-2)&&(AnotherDay==2))
+                TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
+
+              else if ((RoznicaDat==-3)&&(AnotherDay==3))
+                TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
+
+              else if ((RoznicaDat==-4)&&(AnotherDay==4))
+                TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
+
+              else if ((RoznicaDat==-5)&&(AnotherDay==5))
+                TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
+
+              else if ((RoznicaDat==-6)&&(AnotherDay==6))
+                TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
+
+              else if ((RoznicaDat==-7)&&(AnotherDay==7))
+                TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
+
+              else if ((RoznicaDat==-14)&&(AnotherDay==8))
+                TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
+
+              else eSong=1;
+
+              if (SoundPlay==1)
+              {
+                if(eSong==0)
+                {
+                  if(Song==0)
+                  {
+                    if(FileExists(PluginPath + "\\\\BirthdayReminder\\\\birthday.wav"))
+                    {
+                      AnsiString SoundPatch = PluginPath + "\\\\BirthdayReminder\\\\birthday.wav";
+                      sndPlaySound(SoundPatch.c_str(), SND_SYNC);
+                      Song=1;
+                    }
+                    else
+                    {
+                      PlaySound("ID_SONG1", HInstance, SND_ASYNC | SND_RESOURCE);
+                      Song=1;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
           bYear=0,bMonth=0,bDay=0;
           delete Ini;
         }
@@ -232,7 +357,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t *)L"Birthday Reminder";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,2,0);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,3,0);
   TPluginInfo.Description = (wchar_t *)L"Powiadomienie przypominaj¹ce o urodzinach kontaktów";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
@@ -241,20 +366,6 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 
   return &TPluginInfo;
 }
-
-//void PrzypiszSkrotMenu()
-//{
-//  TPluginActionSkrot.cbSize = sizeof(PluginAction);
-//  TPluginActionSkrot.pszCaption = (wchar_t*) L"Birthday Reminder";
-//  TPluginActionSkrot.Position = 0;
-//  TPluginActionSkrot.IconIndex = plugin_icon_idx;
-//  TPluginActionSkrot.pszService = (wchar_t*) L"serwis_BirthdayReminderSettingsService";
-//  TPluginActionSkrot.pszPopupName = (wchar_t*) L"popPlugins";
-//  TPluginActionSkrot.PopupPosition = 0;
-//
-//  TPluginLink.CallService(AQQ_CONTROLS_CREATEPOPUPMENUITEM,0,(LPARAM)(&TPluginActionSkrot));
-//  TPluginLink.CreateServiceFunction(L"serwis_BirthdayReminderSettingsService",BirthdayReminderSettingsService);
-//}
 
 int __stdcall OnModulesLoaded(WPARAM, LPARAM)
 {
@@ -292,21 +403,15 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
    CreateDir(PluginPath + "\\\\BirthdayReminder");
   if(!FileExists(PluginPath + "\\\\BirthdayReminder\\\\cake.png"))
    stream->SaveToFile(PluginPath + "\\\\BirthdayReminder\\\\cake.png");
-//  stream->SaveToFile("cake.png");
   //Wypakowanie ikony - Koniec
 
+  //odczyt ustawien
   TIniFile *Ini = new TIniFile(PluginPath + "\\\\BirthdayReminder\\\\Settings.ini");
   TimeOut = Ini->ReadInteger("Settings", "TimeOut", 6);
   TimeOut = TimeOut * 1000;
-
-//  //Przypisanie ikony
-//  wchar_t* plugin_icon_path = L"cake.png";
-//  plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
-//
-//  //Usuniecie ikony
-//  DeleteFile("cake.png");
-//
-//  PrzypiszSkrotMenu();
+  SoundPlay = Ini->ReadInteger("Settings", "Sound", 1);
+  AnotherDay = Ini->ReadInteger("Settings", "Another", 0);
+  InBirthDay = Ini->ReadInteger("Settings", "InBirthDay", 1);
 
   //Data
   DecodeDate(tCurrentDate, tYear, tMonth, tDay);
@@ -318,9 +423,6 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
 
 extern "C" int __declspec(dllexport) __stdcall Unload()
 {
-//  TPluginLink.DestroyServiceFunction(BirthdayReminderSettingsService);
-//  TPluginLink.CallService(AQQ_ICONS_DESTROYPNGICON,0,(LPARAM)(plugin_icon_idx));
-//  TPluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&TPluginActionSkrot));
   TPluginLink.UnhookEvent(&OnModulesLoaded);
 
   return 0;

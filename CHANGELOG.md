@@ -1,3 +1,9 @@
+1.0.3.0
+-----
+* Dodanie opcji wy³¹czaj¹cej dŸwiêk przy powiadomieniu.
+* Dodanie opcji przypominania o urodzinach na dzieñ, 2, 3, 4, 5, 6, 7 i dwa tygodnie przed.
+* Dodanie opcji wy³¹czenia powiadomienia w urodziny kontaktu.
+
 1.0.2.0
 -----
 * Poprawienie b³êdu z wyœwietlaniem liter ze znakami diaktrycznymi (b³¹d dekodowania Base64).

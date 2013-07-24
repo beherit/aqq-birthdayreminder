@@ -1,11 +1,11 @@
 object SettingsForm: TSettingsForm
-  Left = 449
-  Top = 111
+  Left = 344
+  Top = 279
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Ustawienia'
-  ClientHeight = 73
-  ClientWidth = 230
+  ClientHeight = 142
+  ClientWidth = 235
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -54,7 +54,7 @@ object SettingsForm: TSettingsForm
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Info: TLabel
+  object TimeNot: TLabel
     Left = 8
     Top = 10
     Width = 170
@@ -67,9 +67,16 @@ object SettingsForm: TSettingsForm
     Font.Style = []
     ParentFont = False
   end
+  object Another: TLabel
+    Left = 8
+    Top = 79
+    Width = 94
+    Height = 13
+    Caption = 'Informuj r'#243'wnie'#380' na:'
+  end
   object OkButton: TButton
     Left = 8
-    Top = 40
+    Top = 110
     Width = 75
     Height = 25
     Caption = 'OK'
@@ -79,7 +86,7 @@ object SettingsForm: TSettingsForm
   object TimeBox: TComboBox
     Left = 184
     Top = 8
-    Width = 38
+    Width = 45
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
@@ -98,5 +105,44 @@ object SettingsForm: TSettingsForm
       '13'
       '14'
       '15')
+  end
+  object SoundCheckBox: TCheckBox
+    Left = 8
+    Top = 34
+    Width = 209
+    Height = 17
+    Caption = 'Odtwarzaj muzyk'#281' przy notyfikacji'
+    Checked = True
+    State = cbChecked
+    TabOrder = 2
+  end
+  object BirthDayCheckBox: TCheckBox
+    Left = 8
+    Top = 55
+    Width = 209
+    Height = 17
+    Caption = 'Powiadamiaj w dniu urodzin'
+    Checked = True
+    State = cbChecked
+    TabOrder = 3
+  end
+  object AnotherDayBox: TComboBox
+    Left = 108
+    Top = 76
+    Width = 121
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 4
+    Items.Strings = (
+      'Brak'
+      'Dzie'#324' przed'
+      'Dwa dni przed'
+      'Trzy dni przed'
+      'Cztery dni przed'
+      'Pi'#281#263' dni przed'
+      'Sze'#347#263' dni przed'
+      'Tydzie'#324' przed'
+      'Dwa tygodnie przed')
   end
 end

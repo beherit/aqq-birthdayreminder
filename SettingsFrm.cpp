@@ -25,6 +25,20 @@ void __fastcall TSettingsForm::FormShow(TObject *Sender)
   int eTimeOut = Ini->ReadInteger("Settings", "TimeOut", 6);
   TimeBox->ItemIndex=eTimeOut - 3;
 
+  int Sounds = Ini->ReadInteger("Settings", "Sound", 1);
+  if (Sounds==1)
+    SoundCheckBox->Checked=true;
+  if (Sounds==0)
+    SoundCheckBox->Checked=false;
+
+  int InBirthDay = Ini->ReadInteger("Settings", "InBirthDay", 1);
+  if (InBirthDay==1)
+    BirthDayCheckBox->Checked=true;
+  if (InBirthDay==0)
+    BirthDayCheckBox->Checked=false;
+
+  AnotherDayBox->ItemIndex = Ini->ReadInteger("Settings", "Another", 0);
+    
   delete Ini;
 }
 //---------------------------------------------------------------------------
@@ -32,11 +46,26 @@ void __fastcall TSettingsForm::FormShow(TObject *Sender)
 void __fastcall TSettingsForm::OkButtonClick(TObject *Sender)
 {
   TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
+
   Ini->WriteInteger("Settings", "TimeOut", TimeBox->ItemIndex + 3);
+
+  if (SoundCheckBox->Checked==true)
+   Ini->WriteInteger("Settings", "Sound", 1);
+  if (SoundCheckBox->Checked==false)
+   Ini->WriteInteger("Settings", "Sound", 0);
+
+  if (BirthDayCheckBox->Checked==true)
+   Ini->WriteInteger("Settings", "InBirthDay", 1);
+  if (BirthDayCheckBox->Checked==false)
+   Ini->WriteInteger("Settings", "InBirthDay", 0);
+
+  Ini->WriteInteger("Settings", "Another", AnotherDayBox->ItemIndex);
 
   delete Ini;
 
   Close();
 }
 //---------------------------------------------------------------------------
+
+
 
