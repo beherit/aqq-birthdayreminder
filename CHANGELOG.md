@@ -1,3 +1,8 @@
+1.0.6.2
+-----
+* Ma³a poprawka odczytu daty urodzin z plików.
+* Usuniêto b³¹d powiadamiania o urodzinach kontaktów, które nie mia³y zapisanej daty.
+
 1.0.6.0
 -----
 * Optymalizacja dzia³ania wtyczki.
