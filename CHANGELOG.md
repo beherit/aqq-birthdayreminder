@@ -1,3 +1,9 @@
+1.0.6.0
+-----
+* Optymalizacja dzia³ania wtyczki.
+* Poprawiono drobny wyciek pamiêci.
+* Dodanie zabezpieczenia dla "multikontaktów" (je¿eli pseudonim kontaktu siê powtórzy to informacja o urodzinach nie bêdzie wyœwietlona).
+
 1.0.5.2
 -----
 * Zmieniono dzia³anie pokazywania powiadomienia “raz dziennie” - teraz na prawdê pokazuje siê tylko raz dziennie. Poza tym domyœlnie i tak chmurka bêdzie siê pokazywaæ przy ka¿dym w³¹czeniu AQQ!

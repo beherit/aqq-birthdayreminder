@@ -9,10 +9,10 @@
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES) SettingsFrm.dfm"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="vclx.lib lmdrtl8rt_60.lib lmdrtlx8rt_60.lib lmdcore8rt_60.lib vcl.lib 
-      rtl.lib"/>
+    <LIBRARIES value="Indy60.lib dclusr.lib vclx.lib lmdrtl8rt_60.lib lmdrtlx8rt_60.lib 
+      lmdcore8rt_60.lib vcl.lib rtl.lib"/>
     <SPARELIBS value="rtl.lib vcl.lib lmdcore8rt_60.lib lmdrtlx8rt_60.lib lmdrtl8rt_60.lib 
-      vclx.lib"/>
+      vclx.lib dclusr.lib Indy60.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi vclx.bpi bcbsmp.bpi dclocx.bpi"/>
     <PATHCPP value=".;"/>
     <PATHPAS value=".;"/>
@@ -24,8 +24,8 @@
     <USERDEFINES value="_DEBUG"/>
     <SYSDEFINES value="NO_STRICT"/>
     <MAINSOURCE value="BirthdayReminder.bpf"/>
-    <INCLUDEPATH value="$(BCB)\lib\b6;&quot;D:\Borland - moje projkety\BirthdayReminder&quot;;$(BCB)\include;$(BCB)\include\vcl"/>
-    <LIBPATH value="$(BCB)\Projects\Lib;$(BCB)\lib\b6;&quot;D:\Borland - moje projkety\BirthdayReminder&quot;;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="$(BCB)\xpman;$(BCB)\lib\b6;&quot;D:\Borland - moje projkety\BirthdayReminder&quot;;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="&quot;c:\program files\borland\c6&quot;;$(BCB)\xpman;$(BCB)\Projects\Lib;$(BCB)\lib\b6;&quot;D:\Borland - moje projkety\BirthdayReminder&quot;;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par"/>
     <OTHERFILES value=""/>
   </MACROS>
@@ -61,8 +61,8 @@ IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=1
 MinorVer=0
-Release=5
-Build=2
+Release=6
+Build=0
 Debug=0
 PreRelease=0
 Special=0
@@ -74,29 +74,28 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=Krzysztof Grochocki (Beherit)
 FileDescription=
-FileVersion=1.0.5.2
+FileVersion=1.0.6.0
 InternalName=Birthday Reminder
 LegalCopyright=Krzysztof Grochocki (Beherit)
 LegalTrademarks=Krzysztof Grochocki (Beherit)
 OriginalFilename=BirthdayReminder.dll
 ProductName=Birthday Reminder
-ProductVersion=1.0.5.2
+ProductVersion=1.0.6.0
 Comments=Wtyczka przypomina o urodzinach kontaktów
 
-[Excluded Packages]
-C:\Program Files\ZipForge\Lib\C++ Builder 6\dclZipForgeb6.bpl=ZipForge Package
-
 [HistoryLists\hlIncludePath]
-Count=3
-Item0=$(BCB)\lib\b6;D:\Borland - moje projkety\BirthdayReminder;$(BCB)\include;$(BCB)\include\vcl
-Item1=D:\Borland - moje projkety\BirthdayReminder;$(BCB)\include;$(BCB)\include\vcl
-Item2=$(BCB)\include;$(BCB)\include\vcl
+Count=4
+Item0=$(BCB)\xpman;$(BCB)\lib\b6;D:\Borland - moje projkety\BirthdayReminder;$(BCB)\include;$(BCB)\include\vcl
+Item1=$(BCB)\lib\b6;D:\Borland - moje projkety\BirthdayReminder;$(BCB)\include;$(BCB)\include\vcl
+Item2=D:\Borland - moje projkety\BirthdayReminder;$(BCB)\include;$(BCB)\include\vcl
+Item3=$(BCB)\include;$(BCB)\include\vcl
 
 [HistoryLists\hlLibraryPath]
-Count=3
-Item0=$(BCB)\Projects\Lib;$(BCB)\lib\b6;D:\Borland - moje projkety\BirthdayReminder;$(BCB)\lib\obj;$(BCB)\lib
-Item1=D:\Borland - moje projkety\BirthdayReminder;$(BCB)\lib\obj;$(BCB)\lib
-Item2=$(BCB)\lib\obj;$(BCB)\lib
+Count=4
+Item0=c:\program files\borland\c6;$(BCB)\xpman;$(BCB)\Projects\Lib;$(BCB)\lib\b6;D:\Borland - moje projkety\BirthdayReminder;$(BCB)\lib\obj;$(BCB)\lib
+Item1=$(BCB)\Projects\Lib;$(BCB)\lib\b6;D:\Borland - moje projkety\BirthdayReminder;$(BCB)\lib\obj;$(BCB)\lib
+Item2=D:\Borland - moje projkety\BirthdayReminder;$(BCB)\lib\obj;$(BCB)\lib
+Item3=$(BCB)\lib\obj;$(BCB)\lib
 
 [HistoryLists\hlDebugSourcePath]
 Count=1
