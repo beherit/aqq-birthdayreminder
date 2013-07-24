@@ -737,6 +737,17 @@ object SettingsForm: TSettingsForm
   end
   object IdDecoderMIME: TIdDecoderMIME
     FillChar = '='
+    Left = 96
+    Top = 88
+  end
+  object sSkinProvider: TsSkinProvider
+    AddedTitle.Font.Charset = DEFAULT_CHARSET
+    AddedTitle.Font.Color = clNone
+    AddedTitle.Font.Height = -11
+    AddedTitle.Font.Name = 'Tahoma'
+    AddedTitle.Font.Style = []
+    SkinData.SkinSection = 'FORM'
+    TitleButtons = <>
     Left = 64
     Top = 88
   end
