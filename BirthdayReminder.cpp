@@ -50,6 +50,7 @@ AnsiString tCurrentDate = Todey;
 Word tYear,tMonth,tDay;
 Word bYear=0,bMonth=0,bDay=0;
 AnsiString BirthDay;
+AnsiString Nick;
 
 //do porównania dat
 double DataAktualna;
@@ -62,6 +63,7 @@ int TimeOut;
 int SoundPlay;
 int AnotherDay;
 int InBirthDay;
+int ShowAge;
 
 //Base64---------------------------------------------------------------------
 const char          fillchar = '=';
@@ -121,6 +123,28 @@ AnsiString Base64Decode(string data)
 }
 //---------------------------------------------------------------------------
 
+void Base64Repair() //poprawa BASE64
+{
+  Nick = StringReplace(Nick, "Ä™", "ê", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Ã³", "ó", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Ä…", "¹", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Å›", "œ", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Å‚", "³", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Å¼", "¿", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Åº", "Ÿ", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Ä‡", "æ", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Å„", "ñ", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Ä˜", "Ê", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Ã“", "Ó", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Ä„", "¥", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Åš", "Œ", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Å", "£", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Å»", "¯", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Å¹", "", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Ä†", "Æ", TReplaceFlags() << rfReplaceAll);
+  Nick = StringReplace(Nick, "Åƒ", "Ñ", TReplaceFlags() << rfReplaceAll);
+}
+
 void FindContacts(String Dir, String typ)
 {
   TSearchRec sr;
@@ -171,31 +195,14 @@ void FindContacts(String Dir, String typ)
           {
             if((StrToInt(bMonth)==StrToInt(tMonth))&&(StrToInt(bDay)==StrToInt(tDay)))
             {
-              AnsiString Nick = Base64Decode((Ini->ReadString("Buddy", "Nick", "").c_str()));
-              //poprawa BASE64
-              Nick = StringReplace(Nick, "Ä™", "ê", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ã³", "ó", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ä…", "¹", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å›", "œ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å‚", "³", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å¼", "¿", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Åº", "Ÿ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ä‡", "æ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å„", "ñ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ä˜", "Ê", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ã“", "Ó", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ä„", "¥", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Åš", "Œ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å", "£", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å»", "¯", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å¹", "", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ä†", "Æ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Åƒ", "Ñ", TReplaceFlags() << rfReplaceAll);
-              //koniec
+              Nick = Base64Decode((Ini->ReadString("Buddy", "Nick", "").c_str()));
+              Base64Repair();
 
               bYear = tYear - bYear;
 
-              AnsiString TextTmp = Nick + " obchodzi dziœ urodziny! (" + bYear + ")";
+              AnsiString TextTmp = Nick + " obchodzi dziœ urodziny!";
+              if(ShowAge==1)
+                TextTmp = TextTmp + " (" + bYear + ")";
 
               wchar_t* Text = AnsiTowchar_t(TextTmp);
               wchar_t* ImagePath = AnsiTowchar_t(ImagePathTmp);
@@ -205,8 +212,6 @@ void FindContacts(String Dir, String typ)
               TPluginShowInfo.Text = Text;
               TPluginShowInfo.ImagePath = ImagePath;
               TPluginShowInfo.TimeOut = TimeOut;
-              //TPluginShowInfo.ActionID;
-              //TPluginShowInfo.Tick;
               TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
 
               if (SoundPlay==1)
@@ -233,55 +238,68 @@ void FindContacts(String Dir, String typ)
           {
             if(RoznicaOk==1)
             {
-              AnsiString Nick = Base64Decode((Ini->ReadString("Buddy", "Nick", "").c_str()));
-              //poprawa BASE64
-              Nick = StringReplace(Nick, "Ä™", "ê", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ã³", "ó", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ä…", "¹", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å›", "œ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å‚", "³", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å¼", "¿", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Åº", "Ÿ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ä‡", "æ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å„", "ñ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ä˜", "Ê", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ã“", "Ó", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ä„", "¥", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Åš", "Œ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å", "£", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å»", "¯", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Å¹", "", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Ä†", "Æ", TReplaceFlags() << rfReplaceAll);
-              Nick = StringReplace(Nick, "Åƒ", "Ñ", TReplaceFlags() << rfReplaceAll);
-              //koniec
-
+              Nick = Base64Decode((Ini->ReadString("Buddy", "Nick", "").c_str()));
+              Base64Repair();
+              
               bYear = tYear - bYear;
               AnsiString TextTmp;
               int eSong=0;
 
               if (AnotherDay==1)
-                TextTmp = Nick + " obchodzi jutro urodziny! (" + bYear + ")";
+              {
+                TextTmp = Nick + " obchodzi jutro urodziny!";
+                if(ShowAge==1)
+                TextTmp = TextTmp + " (" + bYear + ")";
+              }
 
               if (AnotherDay==2)
-                TextTmp = Nick + " za dwa dni obchodzi urodziny! (" + bYear + ")";
+              {
+                TextTmp = Nick + " za dwa dni obchodzi urodziny!";
+                if(ShowAge==1)
+                TextTmp = TextTmp + " (" + bYear + ")";
+              }
 
               if (AnotherDay==3)
-                TextTmp = Nick + " za trzy dni obchodzi urodziny! (" + bYear + ")";
+              {
+                TextTmp = Nick + " za trzy dni obchodzi urodziny!";
+                if(ShowAge==1)
+                TextTmp = TextTmp + " (" + bYear + ")";
+              }
 
               if (AnotherDay==4)
-                TextTmp = Nick + " za cztery dni obchodzi urodziny! (" + bYear + ")";
+              {
+                TextTmp = Nick + " za cztery dni obchodzi urodziny!";
+                if(ShowAge==1)
+                TextTmp = TextTmp + " (" + bYear + ")";
+              }
 
               if (AnotherDay==5)
-                TextTmp = Nick + " za piêæ dni obchodzi urodziny! (" + bYear + ")";
+              {
+                TextTmp = Nick + " za piêæ dni obchodzi urodziny!";
+                if(ShowAge==1)
+                TextTmp = TextTmp + " (" + bYear + ")";
+              }
 
               if (AnotherDay==6)
-                TextTmp = Nick + " za szeœæ dni obchodzi urodziny! (" + bYear + ")";
+              {
+                TextTmp = Nick + " za szeœæ dni obchodzi urodziny!";
+                if(ShowAge==1)
+                TextTmp = TextTmp + " (" + bYear + ")";
+              }
 
               if (AnotherDay==7)
-                TextTmp = Nick + " za tydzieñ obchodzi urodziny! (" + bYear + ")";
+              {
+                TextTmp = Nick + " za tydzieñ obchodzi urodziny!";
+                if(ShowAge==1)
+                TextTmp = TextTmp + " (" + bYear + ")";
+              }
 
               if (AnotherDay==8)
-                TextTmp = Nick + " za dwa tygodnie obchodzi urodziny! (" + bYear + ")";
+              {
+                TextTmp = Nick + " za dwa tygodnie obchodzi urodziny!";
+                if(ShowAge==1)
+                TextTmp = TextTmp + " (" + bYear + ")";
+              }
 
               wchar_t* Text = AnsiTowchar_t(TextTmp);
               wchar_t* ImagePath = AnsiTowchar_t(ImagePathTmp);
@@ -291,8 +309,7 @@ void FindContacts(String Dir, String typ)
               TPluginShowInfo.Text = Text;
               TPluginShowInfo.ImagePath = ImagePath;
               TPluginShowInfo.TimeOut = TimeOut;
-              //TPluginShowInfo.ActionID;
-              //TPluginShowInfo.Tick;
+
               if ((RoznicaDat==-1)&&(AnotherDay==1))
                 TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
 
@@ -357,8 +374,8 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t *)L"Birthday Reminder";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,3,0);
-  TPluginInfo.Description = (wchar_t *)L"Powiadomienie przypominaj¹ce o urodzinach kontaktów";
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,4,0);
+  TPluginInfo.Description = (wchar_t *)L"Wtyczka przypomina o urodzinach kontaktów";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
   TPluginInfo.Copyright = (wchar_t *)L"Prawa zastrze¿one, tylko dla autora.";
@@ -412,6 +429,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
   SoundPlay = Ini->ReadInteger("Settings", "Sound", 1);
   AnotherDay = Ini->ReadInteger("Settings", "Another", 0);
   InBirthDay = Ini->ReadInteger("Settings", "InBirthDay", 1);
+  ShowAge = Ini->ReadInteger("Settings", "ShowAge", 1);
 
   //Data
   DecodeDate(tCurrentDate, tYear, tMonth, tDay);

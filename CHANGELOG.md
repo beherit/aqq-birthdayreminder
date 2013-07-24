@@ -1,3 +1,8 @@
+1.0.4.0
+-----
+* Dodanie opcji wy³¹czenia pokazywania wieku solenizanta.
+* Optymalizacje kodu.
+
 1.0.3.0
 -----
 * Dodanie opcji wy³¹czaj¹cej dŸwiêk przy powiadomieniu.

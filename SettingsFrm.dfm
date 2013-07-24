@@ -1,10 +1,10 @@
 object SettingsForm: TSettingsForm
-  Left = 344
-  Top = 279
+  Left = 780
+  Top = 184
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Ustawienia'
-  ClientHeight = 142
+  ClientHeight = 168
   ClientWidth = 235
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -69,14 +69,14 @@ object SettingsForm: TSettingsForm
   end
   object Another: TLabel
     Left = 8
-    Top = 79
+    Top = 101
     Width = 94
     Height = 13
     Caption = 'Informuj r'#243'wnie'#380' na:'
   end
   object OkButton: TButton
     Left = 8
-    Top = 110
+    Top = 134
     Width = 75
     Height = 25
     Caption = 'OK'
@@ -109,7 +109,7 @@ object SettingsForm: TSettingsForm
   object SoundCheckBox: TCheckBox
     Left = 8
     Top = 34
-    Width = 209
+    Width = 218
     Height = 17
     Caption = 'Odtwarzaj muzyk'#281' przy notyfikacji'
     Checked = True
@@ -118,8 +118,8 @@ object SettingsForm: TSettingsForm
   end
   object BirthDayCheckBox: TCheckBox
     Left = 8
-    Top = 55
-    Width = 209
+    Top = 54
+    Width = 218
     Height = 17
     Caption = 'Powiadamiaj w dniu urodzin'
     Checked = True
@@ -128,7 +128,7 @@ object SettingsForm: TSettingsForm
   end
   object AnotherDayBox: TComboBox
     Left = 108
-    Top = 76
+    Top = 98
     Width = 121
     Height = 21
     Style = csDropDownList
@@ -144,5 +144,15 @@ object SettingsForm: TSettingsForm
       'Sze'#347#263' dni przed'
       'Tydzie'#324' przed'
       'Dwa tygodnie przed')
+  end
+  object AgeCheckBox: TCheckBox
+    Left = 8
+    Top = 74
+    Width = 218
+    Height = 17
+    Caption = 'Pokazuj wiek solenizanta'
+    Checked = True
+    State = cbChecked
+    TabOrder = 5
   end
 end
