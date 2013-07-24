@@ -220,16 +220,11 @@ object SettingsForm: TSettingsForm
     TabOrder = 9
     Visible = False
   end
-  object Tajmer: TTimer
+  object Timer: TTimer
     Enabled = False
-    Interval = 10000
-    OnTimer = TajmerTimer
-    Left = 88
-    Top = 152
-  end
-  object XPMan1: TXPMan
-    Left = 120
-    Top = 152
+    Interval = 15000
+    OnTimer = TimerTimer
+    Left = 64
   end
   object IdDecoderMIME: TIdDecoderMIME
     FillChar = '='

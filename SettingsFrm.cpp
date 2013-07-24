@@ -11,14 +11,14 @@
 #pragma resource "*.dfm"
 TSettingsForm *SettingsForm;
 //---------------------------------------------------------------------------
-__declspec(dllimport)void TestChmurki(AnsiString PluginPath,int TimeOutTest,int ShowAgeTest, int PlaySoundTest);
-__declspec(dllimport)void ShowBirthdayInfo(AnsiString Text, int TimeOut, AnsiString ImagePath, bool SoundPlay);
-__declspec(dllimport)AnsiString GetPluginPath(AnsiString Dir);
-__declspec(dllimport)AnsiString GetContactsPath(AnsiString Dir);
-__declspec(dllimport)AnsiString GetContactNick(AnsiString JID);
+__declspec(dllimport)void TestChmurki(int TimeOutTest,bool ShowAgeTest, bool PlaySoundTest);
+__declspec(dllimport)void ShowBirthdayInfo(UnicodeString CText, int CTimeOut, bool CSoundPlay);
+__declspec(dllimport)UnicodeString GetPluginPath();
+__declspec(dllimport)UnicodeString GetContactsPath();
+__declspec(dllimport)UnicodeString GetContactNick(UnicodeString JID);
 //---------------------------------------------------------------------------
-AnsiString ePluginDirectory;
-AnsiString eContactsPath;
+UnicodeString ePluginDirectory;
+UnicodeString eContactsPath;
 //---------------------------------------------------------------------------
 
 __fastcall TSettingsForm::TSettingsForm(TComponent* Owner)
@@ -42,14 +42,13 @@ void __fastcall TSettingsForm::OkButtonClick(TObject *Sender)
 
 void __fastcall TSettingsForm::TestButonClick(TObject *Sender)
 {
-  ePluginDirectory=GetPluginPath(ePluginDirectory);
-  TestChmurki(ePluginDirectory, TimeBox->ItemIndex + 3, AgeCheckBox->Checked, SoundCheckBox->Checked);
+  TestChmurki(TimeBox->ItemIndex + 3, AgeCheckBox->Checked, SoundCheckBox->Checked);
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TSettingsForm::TajmerTimer(TObject *Sender)
+void __fastcall TSettingsForm::TimerTimer(TObject *Sender)
 {
-  ePluginDirectory=GetPluginPath(ePluginDirectory);
+  ePluginDirectory=GetPluginPath();
 
   TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
   int Repeat = Ini->ReadInteger("Settings", "Repeat", 0);
@@ -58,14 +57,14 @@ void __fastcall TSettingsForm::TajmerTimer(TObject *Sender)
   if (Repeat==1) //Raz dziennie
   {
     TDateTime tmpTodey = TDateTime::CurrentDate();
-    AnsiString tmpCurrentDate = tmpTodey;
+    UnicodeString tmpCurrentDate = tmpTodey;
 
     TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
-    AnsiString tmpCurrentDay = Ini->ReadString("Settings", "CurrentDay", "");
+    UnicodeString tmpCurrentDay = Ini->ReadString("Settings", "CurrentDay", "");
     delete Ini;
 
     if(AnsiSameStr(tmpCurrentDay,tmpCurrentDate))
-     Tajmer->Enabled=false;
+     Timer->Enabled=false;
     else
     {
       aFindContacts->Execute();
@@ -74,17 +73,17 @@ void __fastcall TSettingsForm::TajmerTimer(TObject *Sender)
       Ini->WriteString("Settings", "CurrentDay", tmpCurrentDate);
       delete Ini;
 
-      Tajmer->Enabled=false;
-    }
+	  Timer->Enabled=false;
+	}
   }
   else
   {
     aFindContacts->Execute();
 
     if (Repeat==0) //Przy ka¿dym w³¹czeniu AQQ
-     Tajmer->Enabled=false;
+     Timer->Enabled=false;
     else //Inne tam
-     Tajmer->Interval = (Repeat-1) * 3600000;
+     Timer->Interval = (Repeat-1) * 3600000;
   }
 }
 //---------------------------------------------------------------------------
@@ -94,26 +93,27 @@ void __fastcall TSettingsForm::aFindContactsExecute(TObject *Sender)
   NicksList->Clear();
   int index; //Do sprawdzania nikow
 
-  ePluginDirectory=GetPluginPath(ePluginDirectory);
-  eContactsPath=GetContactsPath(eContactsPath);
+  ePluginDirectory=GetPluginPath();
+  eContactsPath=GetContactsPath();
   FileListBox->Clear();
   FileListBox->Directory=eContactsPath;
 
-  Word tYear,tMonth,tDay; //Do rozkodowanej aktualnej data
-  TDateTime Todey = TDateTime::CurrentDate();
-  AnsiString tCurrentDate = Todey; //Pobranie aktualnej daty zakodowanej
-  DecodeDate(tCurrentDate, tYear, tMonth, tDay); //Rozkodowanie daty
+  Word tYear=0,tMonth=0,tDay=0; //Do rozkodowanej aktualnej data
+  TDateTime Todey = TDateTime::CurrentDate(); //Pobranie aktualnej daty zakodowanej
+  DecodeDate(Todey, tYear, tMonth, tDay); //Rozkodowanie aktualnej daty
   Word WbYear=0,WbMonth=0,WbDay=0; //Do rozkodowanej daty urodzin kontaktu
-  AnsiString AbYear=0,AbMonth=0,AbDay=0; //j.w.
-  AnsiString BirthDay; //Data urodzin kontaktu
+  UnicodeString AbYear=0,AbMonth=0,AbDay=0; //j.w.
+  TDateTime BirthDay; //Data urodzin kontaktu
+  UnicodeString BirthDayAnsi; //Data urodzin kontaktu
 
   //do porównania dat
   double DataAktualna;
   double DataKontaktu;
-  int RoznicaDat=0;
+  int RoznicaDat;
 
-  AnsiString FileName; //Nazwa pliku ini
-  
+  UnicodeString FileName; //Nazwa pliku ini
+  UnicodeString Text; //Tekst na chmurce
+
   //odczyt ustawien
   TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
   int TimeOut = Ini->ReadInteger("Settings", "TimeOut", 6);
@@ -131,57 +131,53 @@ void __fastcall TSettingsForm::aFindContactsExecute(TObject *Sender)
     FileName = FileListBox->FileName;
     FileName = StringReplace(FileName, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
-    TIniFile *Ini = new TIniFile(FileName);
-    Ini = new TIniFile(FileName);
-    BirthDay = IdDecoderMIME->DecodeToString((Ini->ReadString("Buddy", "Birth", "A===").c_str()));
+	TIniFile *Ini = new TIniFile(FileName);
+	BirthDayAnsi = IdDecoderMIME->DecodeString((Ini->ReadString("Buddy", "Birth", "A===").c_str()));
     delete Ini;
 
     try
     {
-      //DecodeDate(BirthDay, bYear, bMonth, bDay);
-
-      if(AnsiPos("-",BirthDay)>0)
-      {
+	  if(AnsiPos("-",BirthDayAnsi)>0)
+	  {
         //Wyciagniecie roku urodzin
-        AbYear = BirthDay;
-        AbYear = AbYear.Delete(AnsiPos("-",AbYear),AbYear.Length());
+		AbYear = BirthDayAnsi;
+		AbYear = AbYear.Delete(AnsiPos("-",AbYear),AbYear.Length());
 
         //Wyciagniecie miesiaca urodzin
-        AbMonth = BirthDay;
+		AbMonth = BirthDayAnsi;
         AbMonth = AbMonth.Delete(1,AnsiPos("-",AbMonth));
         AbMonth = AbMonth.Delete(AnsiPos("-",AbMonth),AbMonth.Length());
 
         //Wyciagniecie dnia urodzin
-        AbDay = BirthDay;
+		AbDay = BirthDayAnsi;
         AbDay = AbDay.Delete(1,AnsiPos("-",AbDay));
-        AbDay = AbDay.Delete(1,AnsiPos("-",AbDay));
+		AbDay = AbDay.Delete(1,AnsiPos("-",AbDay));
 
         //Zakodowanie do domyslnego formatu i odkodowanie
-        BirthDay = "";
-        BirthDay = EncodeDate(StrToInt(AbYear),StrToInt(AbMonth),StrToInt(AbDay));
-        DecodeDate(BirthDay,WbYear,WbMonth,WbDay);  
+		BirthDay = EncodeDate(StrToInt(AbYear),StrToInt(AbMonth),StrToInt(AbDay));
+		DecodeDate(BirthDay,WbYear,WbMonth,WbDay);
 
         //Porownanie dat
         DataAktualna = EncodeDate(tYear, tMonth, tDay);
         DataKontaktu = EncodeDate(tYear, WbMonth, WbDay);
         RoznicaDat = difftime(DataKontaktu, DataAktualna);
 
-        if((InBirthDay==1)&&(RoznicaDat==0))
+		if((InBirthDay==1)&&(RoznicaDat==0))
         {
-          AnsiString Nick = GetContactNick(ExtractFileName(FileListBox->FileName).SetLength(ExtractFileName(FileListBox->FileName).Length()-4));
+		  UnicodeString Nick = GetContactNick(ExtractFileName(FileListBox->FileName).SetLength(ExtractFileName(FileListBox->FileName).Length()-4));
 
-          int index = NicksList->Perform(LB_SELECTSTRING, -1,(LPARAM)Nick.c_str());
+		  int index = NicksList->Items->IndexOf(Nick);
           if(index==-1)
           {
             WbYear = tYear - WbYear;
 
-            AnsiString TextTmp = Nick + " obchodzi dziœ urodziny!";
+			Text = Nick + " obchodzi dziœ urodziny!";
             if(ShowAge==1)
-             TextTmp = TextTmp + " (" + WbYear + ")";
+			 Text = Text + " (" + WbYear + ")";
 
-            ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
+			ShowBirthdayInfo(Text, TimeOut, SoundPlay);
 
-            SoundPlay=0;
+			SoundPlay=0;
             NicksList->Items->Add(Nick);
           }
         }
@@ -190,109 +186,88 @@ void __fastcall TSettingsForm::aFindContactsExecute(TObject *Sender)
         {
           if(AnotherDay!=0)
           {
-            AnsiString Nick = GetContactNick(ExtractFileName(FileListBox->FileName).SetLength(ExtractFileName(FileListBox->FileName).Length()-4));
+            UnicodeString Nick = GetContactNick(ExtractFileName(FileListBox->FileName).SetLength(ExtractFileName(FileListBox->FileName).Length()-4));
 
-            int index = NicksList->Perform(LB_SELECTSTRING, -1,(LPARAM)Nick.c_str());
+			int index = NicksList->Items->IndexOf(Nick);
             if(index==-1)
             {
               WbYear = tYear - WbYear;
-              AnsiString TextTmp;
 
               if(AnotherDay==1)
               {
-                TextTmp = Nick + " obchodzi jutro urodziny!";
+				Text = Nick + " obchodzi jutro urodziny!";
                 if(ShowAge==1)
-                 TextTmp = TextTmp + " (" + WbYear + ")";
-              }
-
+                 Text = Text + " (" + WbYear + ")";
+			  }
               if(AnotherDay==2)
               {
-                TextTmp = Nick + " za dwa dni obchodzi urodziny!";
-                if(ShowAge==1)
-                 TextTmp = TextTmp + " (" + WbYear + ")";
-              }
-
+				Text = Nick + " za dwa dni obchodzi urodziny!";
+				if(ShowAge==1)
+				 Text = Text + " (" + WbYear + ")";
+			  }
               if(AnotherDay==3)
               {
-                TextTmp = Nick + " za trzy dni obchodzi urodziny!";
+				Text = Nick + " za trzy dni obchodzi urodziny!";
                 if(ShowAge==1)
-                 TextTmp = TextTmp + " (" + WbYear + ")";
-              }
-
+                 Text = Text + " (" + WbYear + ")";
+			  }
               if(AnotherDay==4)
               {
-                TextTmp = Nick + " za cztery dni obchodzi urodziny!";
+                Text = Nick + " za cztery dni obchodzi urodziny!";
                 if(ShowAge==1)
-                 TextTmp = TextTmp + " (" + WbYear + ")";
-              }
-
+                 Text = Text + " (" + WbYear + ")";
+			  }
               if(AnotherDay==5)
               {
-                TextTmp = Nick + " za piêæ dni obchodzi urodziny!";
+                Text = Nick + " za piêæ dni obchodzi urodziny!";
                 if(ShowAge==1)
-                 TextTmp = TextTmp + " (" + WbYear + ")";
-              }
-
+                 Text = Text + " (" + WbYear + ")";
+			  }
               if(AnotherDay==6)
               {
-                TextTmp = Nick + " za szeœæ dni obchodzi urodziny!";
+                Text = Nick + " za szeœæ dni obchodzi urodziny!";
                 if(ShowAge==1)
-                 TextTmp = TextTmp + " (" + WbYear + ")";
-              }
-
+                 Text = Text + " (" + WbYear + ")";
+			  }
               if(AnotherDay==7)
               {
-                TextTmp = Nick + " za tydzieñ obchodzi urodziny!";
-                if(ShowAge==1)
-                 TextTmp = TextTmp + " (" + WbYear + ")";
-              }
-
+				Text = Nick + " za tydzieñ obchodzi urodziny!";
+				if(ShowAge==1)
+                 Text = Text + " (" + WbYear + ")";
+			  }
               if(AnotherDay==8)
               {
-                TextTmp = Nick + " za dwa tygodnie obchodzi urodziny!";
+                Text = Nick + " za dwa tygodnie obchodzi urodziny!";
                 if(ShowAge==1)
-                 TextTmp = TextTmp + " (" + WbYear + ")";
-              }
+                 Text = Text + " (" + WbYear + ")";
+			  }
 
-              if((RoznicaDat==1)&&(AnotherDay==1))
-               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-              else if((RoznicaDat==2)&&(AnotherDay==2))
-               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-              else if((RoznicaDat==3)&&(AnotherDay==3))
-               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-              else if((RoznicaDat==4)&&(AnotherDay==4))
-               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-              else if((RoznicaDat==5)&&(AnotherDay==5))
-               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-              else if((RoznicaDat==6)&&(AnotherDay==6))
-               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-              else if((RoznicaDat==7)&&(AnotherDay==7))
-               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-              else if((RoznicaDat==14)&&(AnotherDay==8))
-               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-              SoundPlay=0;
-              NicksList->Items->Add(Nick);
-            }
-          }
-        }
-      }
-    }
-    catch (...) { /*b³¹d - nie rób nic*/ }
+			  if(((RoznicaDat==1)&&(AnotherDay==1))||
+			  ((RoznicaDat==2)&&(AnotherDay==2))||
+			  ((RoznicaDat==3)&&(AnotherDay==3))||
+			  ((RoznicaDat==4)&&(AnotherDay==4))||
+			  ((RoznicaDat==5)&&(AnotherDay==5))||
+			  ((RoznicaDat==6)&&(AnotherDay==6))||
+			  ((RoznicaDat==7)&&(AnotherDay==7))||
+			  ((RoznicaDat==14)&&(AnotherDay==8)))
+			  {
+				ShowBirthdayInfo(Text, TimeOut, SoundPlay);
+				SoundPlay=0;
+				NicksList->Items->Add(Nick);
+			  }
+			}
+		  }
+		}
+	  }
+	}
+	catch (...) { /*b³¹d - nie rób nic*/ }
   }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TSettingsForm::aSaveSettingsExecute(TObject *Sender)
 {
-  ePluginDirectory=GetPluginPath(ePluginDirectory);
+  ePluginDirectory=GetPluginPath();
 
   TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
 
@@ -312,7 +287,7 @@ void __fastcall TSettingsForm::aSaveSettingsExecute(TObject *Sender)
 
 void __fastcall TSettingsForm::aReadSettingsExecute(TObject *Sender)
 {
-  ePluginDirectory=GetPluginPath(ePluginDirectory);
+  ePluginDirectory=GetPluginPath();
 
   TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
 
