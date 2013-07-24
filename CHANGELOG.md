@@ -1,3 +1,9 @@
+2.0.1.0
+-----
+* Zwiêkszenie czasu od w³¹czenia AQQ po którym sprawdzana jest data urodzin kontaktów.
+* Odtwarzanie dŸwiêku przy notyfikacji jest zale¿ne od w³¹czenia/wy³¹czenia dŸwiêków w AQQ.
+* Poprawki kosmetyczne wygl¹du formy.
+
 2.0.0.0
 -----
 * Przepisanie wtyczki pod kompilator CodeGear C++ Builder 2009.

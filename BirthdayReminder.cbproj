@@ -61,6 +61,17 @@
 			<TASM_Debugging>None</TASM_Debugging>
 		</PropertyGroup>
 		<ItemGroup>
+			<ResFiles Include="BirthdayReminder.res">
+				<BuildOrder>3</BuildOrder>
+			</ResFiles>
+			<CppCompile Include="BirthdayReminder.cpp">
+				<BuildOrder>0</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="SettingsFrm.cpp">
+				<Form>SettingsForm</Form>
+				<DependentOn>SettingsFrm.h</DependentOn>
+				<BuildOrder>1</BuildOrder>
+			</CppCompile>
 			<RcItem Include="cake.png">
 				<ResourceType>RCData</ResourceType>
 				<ResourceId>ID_PNG</ResourceId>
@@ -70,17 +81,6 @@
 				<ResourceType>RCData</ResourceType>
 				<ResourceId>ID_SONG</ResourceId>
 			</RcItem>
-			<CppCompile Include="SettingsFrm.cpp">
-				<Form>SettingsForm</Form>
-				<DependentOn>SettingsFrm.h</DependentOn>
-				<BuildOrder>1</BuildOrder>
-			</CppCompile>
-			<ResFiles Include="BirthdayReminder.res">
-				<BuildOrder>3</BuildOrder>
-			</ResFiles>
-			<CppCompile Include="BirthdayReminder.cpp">
-				<BuildOrder>0</BuildOrder>
-			</CppCompile>
 			<FormResources Include="SettingsFrm.dfm"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
@@ -105,7 +105,7 @@
 						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
 						<VersionInfo Name="MajorVer">2</VersionInfo>
 						<VersionInfo Name="MinorVer">0</VersionInfo>
-						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Release">1</VersionInfo>
 						<VersionInfo Name="Build">0</VersionInfo>
 						<VersionInfo Name="Debug">False</VersionInfo>
 						<VersionInfo Name="PreRelease">False</VersionInfo>
@@ -118,13 +118,13 @@
 					<VersionInfoKeys>
 						<VersionInfoKeys Name="CompanyName">Krzysztof Grochocki (Beherit)</VersionInfoKeys>
 						<VersionInfoKeys Name="FileDescription"/>
-						<VersionInfoKeys Name="FileVersion">2.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="FileVersion">2.0.1.0</VersionInfoKeys>
 						<VersionInfoKeys Name="InternalName">Birthday Reminder</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalCopyright">Krzysztof Grochocki (Beherit)</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalTrademarks">Krzysztof Grochocki (Beherit)</VersionInfoKeys>
 						<VersionInfoKeys Name="OriginalFilename">BirthdayReminder.dll</VersionInfoKeys>
 						<VersionInfoKeys Name="ProductName">Birthday Reminder</VersionInfoKeys>
-						<VersionInfoKeys Name="ProductVersion">2.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="ProductVersion">2.0.1.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments">Przypominanie o urodzinach kontaktów</VersionInfoKeys>
 					</VersionInfoKeys>
 					<Debugging>

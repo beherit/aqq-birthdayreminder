@@ -15,11 +15,12 @@
 #include <IdCoder3to4.hpp>
 #include <FileCtrl.hpp>
 #include <ActnList.hpp>
+#include <ComCtrls.hpp>
 //---------------------------------------------------------------------------
 class TSettingsForm : public TForm
 {
 __published:	// IDE-managed Components
-        TLabel *TimeNot;
+	TLabel *TimeNotLabel;
         TButton *OkButton;
         TComboBox *TimeBox;
         TCheckBox *SoundCheckBox;
@@ -39,6 +40,8 @@ __published:	// IDE-managed Components
         TListBox *NicksList;
         TAction *aSaveSettings;
         TAction *aReadSettings;
+	TTabControl *TabControl;
+	TAction *aExit;
         void __fastcall FormShow(TObject *Sender);
         void __fastcall OkButtonClick(TObject *Sender);
         void __fastcall TestButonClick(TObject *Sender);
@@ -46,6 +49,7 @@ __published:	// IDE-managed Components
         void __fastcall aFindContactsExecute(TObject *Sender);
         void __fastcall aSaveSettingsExecute(TObject *Sender);
         void __fastcall aReadSettingsExecute(TObject *Sender);
+	void __fastcall aExitExecute(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TSettingsForm(TComponent* Owner);
