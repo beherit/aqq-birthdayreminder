@@ -37,6 +37,12 @@ void __fastcall TSettingsForm::FormShow(TObject *Sender)
   if (InBirthDay==0)
     BirthDayCheckBox->Checked=false;
 
+  int ShowAge = Ini->ReadInteger("Settings", "ShowAge", 1);
+  if (ShowAge==1)
+    AgeCheckBox->Checked=true;
+  if (ShowAge==0)
+    AgeCheckBox->Checked=false;
+
   AnotherDayBox->ItemIndex = Ini->ReadInteger("Settings", "Another", 0);
     
   delete Ini;
@@ -58,6 +64,11 @@ void __fastcall TSettingsForm::OkButtonClick(TObject *Sender)
    Ini->WriteInteger("Settings", "InBirthDay", 1);
   if (BirthDayCheckBox->Checked==false)
    Ini->WriteInteger("Settings", "InBirthDay", 0);
+
+  if (AgeCheckBox->Checked==true)
+   Ini->WriteInteger("Settings", "ShowAge", 1);
+  if (AgeCheckBox->Checked==false)
+   Ini->WriteInteger("Settings", "ShowAge", 0);
 
   Ini->WriteInteger("Settings", "Another", AnotherDayBox->ItemIndex);
 

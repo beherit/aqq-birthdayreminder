@@ -18,6 +18,7 @@ __published:	// IDE-managed Components
         TCheckBox *BirthDayCheckBox;
         TComboBox *AnotherDayBox;
         TLabel *Another;
+        TCheckBox *AgeCheckBox;
         void __fastcall FormShow(TObject *Sender);
         void __fastcall OkButtonClick(TObject *Sender);
 private:	// User declarations
