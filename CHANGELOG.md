@@ -1,3 +1,8 @@
+3.1.1.0
+-----
+* Drobne zmiany w skórkowaniu formy ustawieñ.
+* Aktualizacja komponentów AlphaControls do najnowszej dostêpnej wersji (8.19).
+
 3.1.0.0
 -----
 * Dodanie 64-bitowej wersji wtyczki.

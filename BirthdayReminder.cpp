@@ -1,8 +1,8 @@
 #include <vcl.h>
 #include <windows.h>
-#include <PluginAPI.h>
 #pragma hdrstop
 #pragma argsused
+#include <PluginAPI.h>
 #include "SettingsFrm.h"
 #include <inifiles.hpp>
 #include <time.h>
@@ -98,7 +98,7 @@ UnicodeString GetThemeDir()
 }
 //---------------------------------------------------------------------------
 
-//Sprawdzanie czy wlaczona jest obsluga stylow obramowania okien
+//Sprawdzanie czy  wlaczona jest zaawansowana stylizacja okien
 bool ChkSkinEnabled()
 {
   TStrings* IniList = new TStringList();
@@ -112,17 +112,29 @@ bool ChkSkinEnabled()
 }
 //---------------------------------------------------------------------------
 
-//Sprawdzanie czy wlaczony jest natywny styl Windows
-bool ChkNativeEnabled()
+//Sprawdzanie ustawien animacji AlphaControls
+bool ChkThemeAnimateWindows()
 {
   TStrings* IniList = new TStringList();
   IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
   TMemIniFile *Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
   Settings->SetStrings(IniList);
   delete IniList;
-  UnicodeString NativeEnabled = Settings->ReadString("Settings","Native","0");
+  UnicodeString AnimateWindowsEnabled = Settings->ReadString("Theme","ThemeAnimateWindows","1");
   delete Settings;
-  return StrToBool(NativeEnabled);
+  return StrToBool(AnimateWindowsEnabled);
+}
+//---------------------------------------------------------------------------
+bool ChkThemeGlowing()
+{
+  TStrings* IniList = new TStringList();
+  IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
+  TMemIniFile *Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
+  Settings->SetStrings(IniList);
+  delete IniList;
+  UnicodeString GlowingEnabled = Settings->ReadString("Theme","ThemeGlowing","1");
+  delete Settings;
+  return StrToBool(GlowingEnabled);
 }
 //---------------------------------------------------------------------------
 
@@ -557,20 +569,19 @@ int __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam)
   //Pobranie informacji o oknie i eventcie
   WindowEvent = (PPluginWindowEvent)lParam;
   int Event = WindowEvent->WindowEvent;
-  UnicodeString EventType = (wchar_t*)WindowEvent->ClassName;
-  
+  UnicodeString ClassName = (wchar_t*)WindowEvent->ClassName;
   //Otwarcie okna z lista zrodel powiadomien
-  if((EventType=="TfrmSourceAdd")&&(Event==WINDOW_EVENT_CREATE))
+  if((ClassName=="TfrmSourceAdd")&&(Event==WINDOW_EVENT_CREATE))
   {
-    //Pobranie uchwytu do okna	
+	//Pobranie uchwytu do okna
 	hFrmSourceAdd = (HWND)WindowEvent->Handle;
 	//Tworzenie elementu do dodawania zrodla wtyczki w interfejsie AQQ
 	BuildBirthdayReminderAddSource();
   }
   //Zamkniecie okna z lista zrodel powiadomien
-  if((EventType=="TfrmSourceAdd")&&(Event==WINDOW_EVENT_CLOSE))
+  if((ClassName=="TfrmSourceAdd")&&(Event==WINDOW_EVENT_CLOSE))
   {
-    //Usuwanie elementu do dodawania zrodla wtyczki z interfejsu AQQ
+	//Usuwanie elementu do dodawania zrodla wtyczki z interfejsu AQQ
 	DestroyBirthdayReminderAddSource();
 	//Usuniecie uchwytu do okna
 	hFrmSourceAdd = NULL;
@@ -745,7 +756,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
   //Hook na pobranie danych przez wskazane zrodlo
   PluginLink.HookEvent(AQQ_SYSTEM_NEWSSOURCE_FETCH,OnNewsFetch);
   //Hook na enumeracje listy kontatkow
-  PluginLink.HookEvent(AQQ_CONTACTS_REPLYLIST,OnReplyList);  
+  PluginLink.HookEvent(AQQ_CONTACTS_REPLYLIST,OnReplyList);
   //Hook na zamkniecie/otwarcie okien
   PluginLink.HookEvent(AQQ_SYSTEM_WINDOWEVENT,OnWindowEvent); 
   //Tworzenie serwisu dla elementu do dodawania zrodla wtyczki z interfejsu AQQ
@@ -799,7 +810,7 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,1,0,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,1,1,0);
   PluginInfo.Description = L"Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
