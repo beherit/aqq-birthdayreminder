@@ -22,12 +22,11 @@ TPluginShowInfo PluginShowInfo;
 TPluginLink PluginLink;
 TPluginInfo PluginInfo;
 
-//Program
 extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = (wchar_t *)L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,1,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,2,0);
   PluginInfo.Description = (wchar_t *)L"Przypominanie o urodzinach kontaktów";
   PluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = (wchar_t *)L"sirbeherit@gmail.com";
@@ -42,7 +41,7 @@ int __stdcall OnModulesLoaded(WPARAM, LPARAM)
 {
   if(handle==NULL)
   {
-	Application->Handle = SettingsForm;
+	Application->Handle = (HWND__*)SettingsForm;
 	handle = new TSettingsForm(Application);
   }
 
@@ -80,16 +79,16 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
    CreateDir(PluginPath + "\\\\BirthdayReminder");
   //Wypakowanie ikony
   if(!FileExists(PluginPath + "\\\\BirthdayReminder\\\\cake.png"))
-   SaveResourceToFile((PluginPath+ "\\\\BirthdayReminder\\\\cake.png").c_str(),"ID_PNG");
+   SaveResourceToFile((PluginPath+ "\\\\BirthdayReminder\\\\cake.png").t_str(),"ID_PNG");
   //Wypakowanie ikony
   if(!FileExists(PluginPath + "\\\\BirthdayReminder\\\\birthday.wav"))
-   SaveResourceToFile((PluginPath+ "\\\\BirthdayReminder\\\\birthday.wav").c_str(),"ID_SONG");
+   SaveResourceToFile((PluginPath+ "\\\\BirthdayReminder\\\\birthday.wav").t_str(),"ID_SONG");
 
   PluginLink.HookEvent(AQQ_SYSTEM_MODULESLOADED, OnModulesLoaded);
   if(PluginLink.CallService(AQQ_SYSTEM_MODULESLOADED,0,0)==1)
   {
 	//Uruchomienie timer'a
-	Application->Handle = SettingsForm;
+	Application->Handle = (HWND__*)SettingsForm;
 	handle = new TSettingsForm(Application);
 	handle->Timer->Enabled=true;
   }
@@ -102,7 +101,7 @@ extern "C" int __declspec(dllexport)__stdcall Settings()
 {
   if(handle==NULL)
   {
-	Application->Handle = SettingsForm;
+	Application->Handle = (HWND__*)SettingsForm;
 	handle = new TSettingsForm(Application);
   }
   handle->Show();
@@ -135,7 +134,7 @@ void TestChmurki(int TimeOutTest, bool ShowAgeTest, bool PlaySoundTest)
   if(PlaySoundTest==1)
   {
 	if(FileExists(PluginPath + "\\\\BirthdayReminder\\\\birthday.wav"))
-	 PlaySound((PluginPath + "\\\\BirthdayReminder\\\\birthday.wav").c_str(), NULL, SND_ASYNC | SND_FILENAME);
+	 PlaySound((PluginPath + "\\\\BirthdayReminder\\\\birthday.wav").t_str(), NULL, SND_ASYNC | SND_FILENAME);
   }
 }
 //---------------------------------------------------------------------------
@@ -197,7 +196,7 @@ void ShowBirthdayInfo(UnicodeString CText, int CTimeOut, bool CSoundPlay)
   if(CSoundPlay==true)
   {
 	if(FileExists(PluginPath + "\\\\BirthdayReminder\\\\birthday.wav"))
-	 PlaySound((PluginPath + "\\\\BirthdayReminder\\\\birthday.wav").c_str(), NULL, SND_ASYNC | SND_FILENAME);
+	 PlaySound((PluginPath + "\\\\BirthdayReminder\\\\birthday.wav").t_str(), NULL, SND_ASYNC | SND_FILENAME);
   }
 }
 //---------------------------------------------------------------------------

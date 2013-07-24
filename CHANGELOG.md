@@ -1,3 +1,9 @@
+2.0.2.0
+-----
+* Przepisanie wtyczki pod kompilator Embarcadero C++ Builder 2010.
+* Wtyczka nie przycina ju¿ AQQ podczas sprawdzania urodzin kontaktów.
+* Zmniejszono czas po którym od za³adowania wtyczka ma odbywaæ siê sprawdzanie urodzin kontaktów.
+
 2.0.1.0
 -----
 * Zwiêkszenie czasu od w³¹czenia AQQ po którym sprawdzana jest data urodzin kontaktów.
