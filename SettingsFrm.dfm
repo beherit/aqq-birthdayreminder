@@ -1,11 +1,11 @@
 object SettingsForm: TSettingsForm
-  Left = 780
-  Top = 184
+  Left = 448
+  Top = 111
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Ustawienia'
-  ClientHeight = 168
-  ClientWidth = 235
+  ClientHeight = 193
+  ClientWidth = 237
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -69,17 +69,30 @@ object SettingsForm: TSettingsForm
   end
   object Another: TLabel
     Left = 8
-    Top = 101
+    Top = 99
     Width = 94
     Height = 13
     Caption = 'Informuj r'#243'wnie'#380' na:'
   end
+  object RepeatLabel: TLabel
+    Left = 8
+    Top = 127
+    Width = 114
+    Height = 13
+    Caption = 'Pokazuj powiadomienie:'
+  end
   object OkButton: TButton
     Left = 8
-    Top = 134
+    Top = 160
     Width = 75
     Height = 25
     Caption = 'OK'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 0
     OnClick = OkButtonClick
   end
@@ -128,8 +141,8 @@ object SettingsForm: TSettingsForm
   end
   object AnotherDayBox: TComboBox
     Left = 108
-    Top = 98
-    Width = 121
+    Top = 96
+    Width = 123
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
@@ -154,5 +167,36 @@ object SettingsForm: TSettingsForm
     Checked = True
     State = cbChecked
     TabOrder = 5
+  end
+  object TestButon: TButton
+    Left = 152
+    Top = 160
+    Width = 75
+    Height = 25
+    Caption = 'Podgl'#261'd'
+    TabOrder = 6
+    OnClick = TestButonClick
+  end
+  object RepeatCheckBox: TComboBox
+    Left = 125
+    Top = 124
+    Width = 106
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 7
+    Items.Strings = (
+      'Raz dziennie'
+      'Co godzin'#281
+      'Co dwie godziny'
+      'Co trzy godziny'
+      'Co cztery godziny')
+  end
+  object Tajmer: TTimer
+    Enabled = False
+    Interval = 10000
+    OnTimer = TajmerTimer
+    Left = 104
+    Top = 160
   end
 end
