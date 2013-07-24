@@ -61,7 +61,7 @@
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Keys>FileVersion=1.0.0.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=1.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
         <_TCHARMapping>wchar_t</_TCHARMapping>
-        <AllPackageLibs>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib;acntBuilderXE3_R.lib;vclimg.lib;vclx.lib</AllPackageLibs>
+        <AllPackageLibs>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib;vclimg.lib;vclx.lib;acntXE3_R.lib</AllPackageLibs>
         <Manifest_File>None</Manifest_File>
         <ILINK_GenerateImportLibrary>true</ILINK_GenerateImportLibrary>
         <VerInfo_Locale>1045</VerInfo_Locale>
@@ -74,19 +74,21 @@
         <BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <VerInfo_Release>1</VerInfo_Release>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
-        <PackageImports>vclie;vcltouch;acntBuilderXE3;bcbsmp;CustomIPTransport;vclribbon;fmx;IndyIPServer;rtl;IndySystem;fmxase;vcl;IndyCore;acntBuilderXE3_R;IndyIPCommon;inetdbbde;DBXInterBaseDriver;inet;DataSnapCommon;fmxobj;vclx;xmlrtl;inetdbxpress;DbxCommonDriver;vclimg;fmxdae;dbxcds;IndyProtocols;MetropolisUILiveTile;vclactnband;bindengine;dbexpress;vcldb;bcbie;IndyIPClient;$(PackageImports)</PackageImports>
+        <PackageImports>vclie;vcltouch;acntXE3;bcbsmp;CustomIPTransport;vclribbon;fmx;IndyIPServer;rtl;IndySystem;fmxase;vcl;IndyCore;acntXE3_R;IndyIPCommon;inetdbbde;DBXInterBaseDriver;inet;DataSnapCommon;fmxobj;vclx;xmlrtl;inetdbxpress;DbxCommonDriver;vclimg;fmxdae;dbxcds;IndyProtocols;MetropolisUILiveTile;vclactnband;bindengine;dbexpress;vcldb;bcbie;IndyIPClient;$(PackageImports)</PackageImports>
         <IncludePath>$(BDSINCLUDE)\windows\vcl;$(IncludePath)</IncludePath>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileVersion=3.1.0.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <VerInfo_Release>1</VerInfo_Release>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileVersion=3.1.0.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
     </PropertyGroup>
@@ -111,35 +113,39 @@
         <ILINK_LibraryPath>$(BDSLIB)\$(PLATFORM)\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_Release>1</VerInfo_Release>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <Defines>_DEBUG;$(Defines)</Defines>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
-        <VerInfo_Keys>FileVersion=3.1.0.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
+        <VerInfo_Release>1</VerInfo_Release>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <Defines>_DEBUG;$(Defines)</Defines>
-        <VerInfo_Keys>FileVersion=3.1.0.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <VerInfo_Release>1</VerInfo_Release>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <Defines>NDEBUG;$(Defines)</Defines>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
-        <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib;acntBuilderXE3_R.lib;vclimg.lib;vclx.lib</LinkPackageStatics>
+        <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib;vclimg.lib;vclx.lib;acntXE3_R.lib</LinkPackageStatics>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileVersion=3.1.0.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
+        <VerInfo_Release>1</VerInfo_Release>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <Defines>NDEBUG;$(Defines)</Defines>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
-        <VerInfo_Keys>FileVersion=3.1.0.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
-        <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib;acntBuilderXE3_R.lib;vclimg.lib;vclx.lib</LinkPackageStatics>
+        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
+        <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib;acntXE3_R.lib;vclimg.lib;vclx.lib</LinkPackageStatics>
     </PropertyGroup>
     <ItemGroup>
         <CppCompile Include="BirthdayReminder.cpp">
