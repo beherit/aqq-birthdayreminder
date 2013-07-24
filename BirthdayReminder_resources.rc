@@ -1,2 +1,2 @@
-ID_PNG RCData "cake.png"
-ID_SONG RCData "birthday.wav"
+PLUGIN_RES RCDATA "Data\\BirthdayReminder.dll.png"
+GITF RCDATA "Data\\Gift.png"

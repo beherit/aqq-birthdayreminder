@@ -1,3 +1,11 @@
+3.0.0.0
+-----
+* Wtyczka zosta³a napisana ca³kowicie od nowa.
+* Przeniesienie mechanizmu wtyczki do centrum powiadomieñ.
+* Pe³ne skórkowanie okna wtyczki.
+* Nowa ikonka skojarzona ze wtyczk¹.
+* Wtyczka posiada w³asn¹ ikonê pokazywan¹ w ustawieniach komunikatora na liœcie wtyczek.
+
 2.0.2.0
 -----
 * Przepisanie wtyczki pod kompilator Embarcadero C++ Builder 2010.
