@@ -9,8 +9,14 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TSettingsForm *SettingsForm;
-
+//---------------------------------------------------------------------------
+__declspec(dllimport)void TestChmurki(int TimeOutTest,int ShowAgeTest, int PlaySoundTest);
+__declspec(dllimport)void FindContacts(String Dir, String typ);
+__declspec(dllimport)void ZmianaUstawien(int eTimeOut, int eSoundPlay, int eAnotherDay, int eInBirthDay, int eShowAge);
+__declspec(dllimport)void ResetDzwieku();
+//---------------------------------------------------------------------------
 AnsiString ePluginDirectory;
+AnsiString eContactsPath;
 //---------------------------------------------------------------------------
 __fastcall TSettingsForm::TSettingsForm(TComponent* Owner)
         : TForm(Owner)
@@ -44,13 +50,17 @@ void __fastcall TSettingsForm::FormShow(TObject *Sender)
     AgeCheckBox->Checked=false;
 
   AnotherDayBox->ItemIndex = Ini->ReadInteger("Settings", "Another", 0);
-    
+
+  RepeatCheckBox->ItemIndex = Ini->ReadInteger("Settings", "Repeat", 0);
+
   delete Ini;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TSettingsForm::OkButtonClick(TObject *Sender)
 {
+  ePluginDirectory = setPluginPath;
+  
   TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
 
   Ini->WriteInteger("Settings", "TimeOut", TimeBox->ItemIndex + 3);
@@ -72,11 +82,45 @@ void __fastcall TSettingsForm::OkButtonClick(TObject *Sender)
 
   Ini->WriteInteger("Settings", "Another", AnotherDayBox->ItemIndex);
 
+  Ini->WriteInteger("Settings", "Repeat", RepeatCheckBox->ItemIndex);
+
   delete Ini;
+
+  ZmianaUstawien((TimeBox->ItemIndex + 3), (SoundCheckBox->Checked), (AnotherDayBox->ItemIndex), (BirthDayCheckBox->Checked), (AgeCheckBox->Checked));
 
   Close();
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TSettingsForm::TestButonClick(TObject *Sender)
+{
+ int TimeOutTest = TimeBox->ItemIndex + 3;
+ int ShowAgeTest = AgeCheckBox->Checked;
+ int PlaySoundTest = SoundCheckBox->Checked;
+ TestChmurki(TimeOutTest, ShowAgeTest, PlaySoundTest);
+}
+//---------------------------------------------------------------------------
 
+void __fastcall TSettingsForm::TajmerTimer(TObject *Sender)
+{
+ eContactsPath = setContactsPath;
+ ePluginDirectory = setPluginPath;
+ 
+ FindContacts(eContactsPath, "ini");
+
+ TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
+
+ int Repeat = Ini->ReadInteger("Settings", "Repeat", 0);
+
+ if (Repeat==0)
+  Tajmer->Enabled=false;
+
+ else
+  Tajmer->Interval = Repeat * 3600000;
+
+ delete Ini;
+ 
+ ResetDzwieku();
+}
+//---------------------------------------------------------------------------
 

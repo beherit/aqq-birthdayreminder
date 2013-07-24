@@ -1,3 +1,9 @@
+1.0.5.0
+-----
+* Wtyczka pokazuje notyfikacjê z 10 sekundowym opóŸnieniem ni¿ po za³adowaniu tak jak w poprzedniej wersji.
+* Dodano przycisk podgl¹du chmurki w ustawieniach.
+* Dodano opcje powiadamiania co jakiœ czas.
+
 1.0.4.0
 -----
 * Dodanie opcji wy³¹czenia pokazywania wieku solenizanta.

@@ -374,21 +374,24 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t *)L"Birthday Reminder";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,4,0);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,5,0);
   TPluginInfo.Description = (wchar_t *)L"Wtyczka przypomina o urodzinach kontaktów";
-  TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki";
+  TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
-  TPluginInfo.Copyright = (wchar_t *)L"Prawa zastrze¿one, tylko dla autora.";
-  TPluginInfo.Homepage = (wchar_t *)L"Brak";
+  TPluginInfo.Copyright = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
+  TPluginInfo.Homepage = (wchar_t *)L"";
 
   return &TPluginInfo;
 }
 
-int __stdcall OnModulesLoaded(WPARAM, LPARAM)
+void SprawdzUrodziny()
 {
-  FindContacts(ContactsPath, "ini");
-  
-  return 0;
+  Application->Handle = SettingsForm;
+  handle = new TSettingsForm(Application);
+  handle->setContactsPath=ContactsPath;
+  handle->setPluginPath=PluginPath;
+  handle->Tajmer->Enabled=true;
+  handle->Close();
 }
 
 extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
@@ -434,14 +437,14 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
   //Data
   DecodeDate(tCurrentDate, tYear, tMonth, tDay);
 
-  TPluginLink.HookEvent(AQQ_SYSTEM_MODULESLOADED, OnModulesLoaded);
+  SprawdzUrodziny();
 
   return 0;
 }
 
 extern "C" int __declspec(dllexport) __stdcall Unload()
 {
-  TPluginLink.UnhookEvent(&OnModulesLoaded);
+  //TPluginLink.UnhookEvent(&OnModulesLoaded);
 
   return 0;
 }
@@ -452,11 +455,57 @@ extern "C" int __declspec(dllexport)__stdcall Settings()
   {
   Application->Handle = SettingsForm;
   handle = new TSettingsForm(Application);
-  handle->setPluginPath=PluginPath;
   handle->Show();
   }
   else
     handle->Show();
 
   return 0;
+}
+
+void ResetDzwieku()
+{
+  Song=0;
+}
+
+void ZmianaUstawien(int eTimeOut, int eSoundPlay, int eAnotherDay, int eInBirthDay, int eShowAge)
+{
+  TimeOut=eTimeOut * 1000;
+  SoundPlay=eSoundPlay;
+  AnotherDay=eAnotherDay;
+  InBirthDay=eInBirthDay;
+  ShowAge=eShowAge;
+}
+
+void TestChmurki(int TimeOutTest, int ShowAgeTest, int PlaySoundTest)
+{
+  AnsiString TextTmp = "Infobot obchodzi dziœ urodziny!";
+  if(ShowAgeTest==1)
+    TextTmp = TextTmp + " (3)";
+  wchar_t* Text = AnsiTowchar_t(TextTmp);
+
+  wchar_t* ImagePath = AnsiTowchar_t(ImagePathTmp);
+
+  TPluginShowInfo.cbSize = sizeof(PluginShowInfo);
+  TPluginShowInfo.Event = tmeInfo;
+  TPluginShowInfo.Text = Text;
+  TPluginShowInfo.ImagePath = ImagePath;
+  TPluginShowInfo.TimeOut = 1000 * TimeOutTest;
+
+  TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
+
+  if(PlaySoundTest==1)
+  {
+    if(FileExists(PluginPath + "\\\\BirthdayReminder\\\\birthday.wav"))
+    {
+      AnsiString SoundPatch = PluginPath + "\\\\BirthdayReminder\\\\birthday.wav";
+      sndPlaySound(SoundPatch.c_str(), SND_SYNC);
+      Song=1;
+    }
+    else
+    {
+      PlaySound("ID_SONG1", HInstance, SND_ASYNC | SND_RESOURCE);
+      Song=1;
+    }
+  }
 }
