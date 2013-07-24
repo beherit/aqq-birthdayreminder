@@ -7,7 +7,6 @@
 #include <inifiles.hpp>
 #include <time.h>
 #include <IdHashMessageDigest.hpp>
-#define ALPHAWINDOWS_SETTRANSPARENCY L"AlphaWindows/SetTransparency"
 
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
 {
@@ -15,8 +14,6 @@ int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved
 }
 //---------------------------------------------------------------------------
 
-//UCHWYT-DO-FORMY-USTAWIEN---------------------------------------------------
-TSettingsForm *hSettingsForm;
 //STRUKTURY-GLOWNE-----------------------------------------------------------
 TPluginLink PluginLink;
 TPluginInfo PluginInfo;
@@ -53,7 +50,6 @@ int __stdcall OnNewsActive(WPARAM wParam, LPARAM lParam);
 int __stdcall OnNewsDelete(WPARAM wParam, LPARAM lParam);
 int __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam);
 int __stdcall OnReplyList(WPARAM wParam, LPARAM lParam);
-int __stdcall OnSetTransparency(WPARAM wParam, LPARAM lParam);
 int __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam);
 int __stdcall ServiceBirthdayReminderAddSource(WPARAM wParam, LPARAM lParam);
 //FORWARD-OTHER-FUNCTION-----------------------------------------------------
@@ -567,23 +563,6 @@ int __stdcall OnReplyList(WPARAM wParam, LPARAM lParam)
 }
 //---------------------------------------------------------------------------
 
-//Hook na zmiane przezroczystosci okna przez wtyczke AlphaWindows
-int __stdcall OnSetTransparency(WPARAM wParam, LPARAM lParam)
-{
-  //Okno ustawien zostalo juz stworzone i jest oskorkowane
-  if((hSettingsForm)&&(hSettingsForm->sSkinManager->Active))
-  {
-	//Pobieranie przekazanego uchwytu do okna
-	HWND hwnd = (HWND)lParam;
-	//Zostala zmieniona przezroczystosc okna wtyczki
-	if(hwnd==hSettingsForm->Handle)
-	 hSettingsForm->sSkinProvider->BorderForm->UpdateExBordersPos(true,(int)wParam);
-  }
-
-  return 0;
-}
-//---------------------------------------------------------------------------
-
 //Hook na zamkniecie/otwarcie okien
 int __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam)
 {
@@ -617,16 +596,13 @@ int __stdcall ServiceBirthdayReminderAddSource(WPARAM wParam, LPARAM lParam)
   //Element na liscie zrdodel powiadomien nie zostal jeszcze dodany
   if(!SourceAddedChk)
   {
-	//Przypisanie uchwytu do formy ustawien
-	if(!hSettingsForm)
-	{
-	  Application->Handle = (HWND)SettingsForm;
-	  hSettingsForm = new TSettingsForm(Application);
-	}
+	//Przypisanie uchwytu do formy
+	Application->Handle = (HWND)SettingsForm;
+	TSettingsForm *hModalSettingsForm = new TSettingsForm(Application);
 	//Pokaznie okna
-	hSettingsForm->ShowModal();
+	hModalSettingsForm->ShowModal();
 	//Zostal wcisniety przycisk OK
-	if(hSettingsForm->AddSource)
+	if(hModalSettingsForm->AddSource)
 	{
 	  //Zapisywanie informacji o dodaniu zrodla
 	  TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
@@ -642,20 +618,19 @@ int __stdcall ServiceBirthdayReminderAddSource(WPARAM wParam, LPARAM lParam)
 	  //Odswiezenie wszystkich zrodel
 	  PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
 	}
+	//Usuniecie uchwytu do formy
+	delete hModalSettingsForm;
   }
   //Element na liscie zrodel powiadomien zostal juz dodany
   else
   {
 	//Przypisanie uchwytu do formy
-	if(!hSettingsForm)
-	{
-	  Application->Handle = (HWND)SettingsForm;
-	  hSettingsForm = new TSettingsForm(Application);
-	}
+	Application->Handle = (HWND)SettingsForm;
+	TSettingsForm *hModalSettingsForm = new TSettingsForm(Application);
 	//Pokaznie okna
-	hSettingsForm->ShowModal();
+	hModalSettingsForm->ShowModal();
 	//Zostal wcisniety przycisk OK
-	if(hSettingsForm->AddSource)
+	if(hModalSettingsForm->AddSource)
 	{
 	  //Zapisywanie informacji o dodaniu zrodla
 	  TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
@@ -671,6 +646,8 @@ int __stdcall ServiceBirthdayReminderAddSource(WPARAM wParam, LPARAM lParam)
 	  //Odswiezenie wszystkich zrodel
 	  PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
 	}
+	//Usuniecie uchwytu do formy
+	delete hModalSettingsForm;
   }
 
   return 0;
@@ -780,8 +757,6 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
   PluginLink.HookEvent(AQQ_SYSTEM_NEWSSOURCE_FETCH,OnNewsFetch);
   //Hook na enumeracje listy kontatkow
   PluginLink.HookEvent(AQQ_CONTACTS_REPLYLIST,OnReplyList);
-  //Hook na zmiane przezroczystosci okna przez wtyczke AlphaWindows
-  PluginLink.HookEvent(ALPHAWINDOWS_SETTRANSPARENCY,OnSetTransparency);
   //Hook na zamkniecie/otwarcie okien
   PluginLink.HookEvent(AQQ_SYSTEM_WINDOWEVENT,OnWindowEvent);
   //Tworzenie serwisu dla elementu do dodawania zrodla wtyczki z interfejsu AQQ
@@ -812,7 +787,6 @@ extern "C" int __declspec(dllexport) __stdcall Unload()
   PluginLink.UnhookEvent(OnNewsDelete);
   PluginLink.UnhookEvent(OnNewsFetch);
   PluginLink.UnhookEvent(OnReplyList);
-  PluginLink.UnhookEvent(OnSetTransparency);
   PluginLink.UnhookEvent(OnWindowEvent);
   //Gdy komunikator nie jest wylaczany
   if(!ForceUnloadExecuted)
@@ -836,7 +810,7 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,1,2,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,1,3,0);
   PluginInfo.Description = L"Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
