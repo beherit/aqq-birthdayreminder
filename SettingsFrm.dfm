@@ -10,7 +10,7 @@ object SettingsForm: TSettingsForm
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Tahoma'
   Font.Style = []
   Icon.Data = {
     0000010001002020000001002000A81000001600000028000000200000004000
@@ -171,7 +171,7 @@ object SettingsForm: TSettingsForm
     Font.Color = clWindowText
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
-    Font.Style = [fsBold]
+    Font.Style = []
     ParentFont = False
     TabOrder = 1
     OnClick = OkButtonClick
@@ -234,7 +234,7 @@ object SettingsForm: TSettingsForm
     object Another: TLabel
       Left = 8
       Top = 99
-      Width = 94
+      Width = 100
       Height = 13
       Caption = 'Informuj r'#243'wnie'#380' na:'
     end
@@ -254,7 +254,6 @@ object SettingsForm: TSettingsForm
       Width = 107
       Height = 21
       Style = csDropDownList
-      ItemHeight = 13
       TabOrder = 5
       Items.Strings = (
         'Przy w'#322#261'czeniu'
@@ -280,7 +279,6 @@ object SettingsForm: TSettingsForm
       Width = 51
       Height = 21
       Style = csDropDownList
-      ItemHeight = 13
       TabOrder = 0
       Items.Strings = (
         '3'
@@ -303,7 +301,6 @@ object SettingsForm: TSettingsForm
       Width = 127
       Height = 21
       Style = csDropDownList
-      ItemHeight = 13
       TabOrder = 4
       Items.Strings = (
         'Brak'
@@ -329,7 +326,7 @@ object SettingsForm: TSettingsForm
   end
   object Timer: TTimer
     Enabled = False
-    Interval = 180000
+    Interval = 20000
     OnTimer = TimerTimer
     Left = 64
   end
@@ -355,5 +352,10 @@ object SettingsForm: TSettingsForm
       ShortCut = 27
       OnExecute = aExitExecute
     end
+  end
+  object IdAntiFreeze: TIdAntiFreeze
+    Active = False
+    OnlyWhenIdle = False
+    Left = 96
   end
 end

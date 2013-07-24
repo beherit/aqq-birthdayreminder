@@ -16,6 +16,8 @@
 #include <FileCtrl.hpp>
 #include <ActnList.hpp>
 #include <ComCtrls.hpp>
+#include "IdAntiFreeze.hpp"
+#include "IdAntiFreezeBase.hpp"
 //---------------------------------------------------------------------------
 class TSettingsForm : public TForm
 {
@@ -42,6 +44,7 @@ __published:	// IDE-managed Components
         TAction *aReadSettings;
 	TTabControl *TabControl;
 	TAction *aExit;
+	TIdAntiFreeze *IdAntiFreeze;
         void __fastcall FormShow(TObject *Sender);
         void __fastcall OkButtonClick(TObject *Sender);
         void __fastcall TestButonClick(TObject *Sender);

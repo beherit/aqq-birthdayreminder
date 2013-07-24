@@ -8,6 +8,8 @@
 #pragma package(smart_init)
 #pragma link "XPMan"
 #pragma link "IdCoderMIME"
+#pragma link "IdAntiFreeze"
+#pragma link "IdAntiFreezeBase"
 #pragma resource "*.dfm"
 TSettingsForm *SettingsForm;
 //---------------------------------------------------------------------------
@@ -91,6 +93,7 @@ void __fastcall TSettingsForm::TimerTimer(TObject *Sender)
 
 void __fastcall TSettingsForm::aFindContactsExecute(TObject *Sender)
 {
+  IdAntiFreeze->Active=true;
   NicksList->Clear();
   int index; //Do sprawdzania nikow
 
@@ -265,6 +268,7 @@ void __fastcall TSettingsForm::aFindContactsExecute(TObject *Sender)
 	}
 	catch (...) { /*b³¹d - nie rób nic*/ }
   }
+  IdAntiFreeze->Active=false;
 }
 //---------------------------------------------------------------------------
 
