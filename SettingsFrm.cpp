@@ -105,22 +105,49 @@ void __fastcall TSettingsForm::TajmerTimer(TObject *Sender)
 {
  eContactsPath = setContactsPath;
  ePluginDirectory = setPluginPath;
- 
- FindContacts(eContactsPath, "ini");
 
  TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
-
  int Repeat = Ini->ReadInteger("Settings", "Repeat", 0);
+ delete Ini;
 
- if (Repeat==0)
-  Tajmer->Enabled=false;
+ if (Repeat==1) //Raz dziennie
+ {
+   TDateTime tmpTodey = TDateTime::CurrentDate();
+   AnsiString tmpCurrentDate = tmpTodey;
+
+   TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
+   AnsiString tmpCurrentDay = Ini->ReadString("Settings", "CurrentDay", "");
+   delete Ini;
+
+   if(AnsiSameStr(tmpCurrentDay,tmpCurrentDate))
+   {
+    Tajmer->Enabled=false;
+   }
+
+   else
+   {
+     FindContacts(eContactsPath, "ini");
+
+     TIniFile *Ini = new TIniFile(ePluginDirectory + "\\\\BirthdayReminder\\\\Settings.ini");
+     Ini->WriteString("Settings", "CurrentDay", tmpCurrentDate);
+     delete Ini;
+
+     Tajmer->Enabled=false;
+   }
+ }
 
  else
-  Tajmer->Interval = Repeat * 3600000;
+ {
+   FindContacts(eContactsPath, "ini");
 
- delete Ini;
- 
+   if (Repeat==0) //Przy ka¿dym w³¹czeniu AQQ
+    Tajmer->Enabled=false;
+   else //Inne tam
+    Tajmer->Interval = (Repeat-1) * 3600000;
+ }
+
  ResetDzwieku();
 }
 //---------------------------------------------------------------------------
+
 

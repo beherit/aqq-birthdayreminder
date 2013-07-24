@@ -366,7 +366,7 @@ void FindContacts(String Dir, String typ)
     }
     while(FindNext(sr) == 0);
     FindClose(sr);
-  }
+  }                  
 }
 
 //Program
@@ -374,7 +374,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t *)L"Birthday Reminder";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,5,0);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,5,2);
   TPluginInfo.Description = (wchar_t *)L"Wtyczka przypomina o urodzinach kontaktów";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";

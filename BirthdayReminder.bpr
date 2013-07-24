@@ -62,7 +62,7 @@ AutoIncBuild=0
 MajorVer=1
 MinorVer=0
 Release=5
-Build=0
+Build=2
 Debug=0
 PreRelease=0
 Special=0
@@ -74,14 +74,17 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=Krzysztof Grochocki (Beherit)
 FileDescription=
-FileVersion=1.0.5.0
+FileVersion=1.0.5.2
 InternalName=Birthday Reminder
 LegalCopyright=Krzysztof Grochocki (Beherit)
 LegalTrademarks=Krzysztof Grochocki (Beherit)
 OriginalFilename=BirthdayReminder.dll
 ProductName=Birthday Reminder
-ProductVersion=1.0.5.0
+ProductVersion=1.0.5.2
 Comments=Wtyczka przypomina o urodzinach kontaktów
+
+[Excluded Packages]
+C:\Program Files\ZipForge\Lib\C++ Builder 6\dclZipForgeb6.bpl=ZipForge Package
 
 [HistoryLists\hlIncludePath]
 Count=3
