@@ -74,21 +74,20 @@
         <BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
-        <VerInfo_Release>1</VerInfo_Release>
+        <VerInfo_Release>2</VerInfo_Release>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <PackageImports>vclie;vcltouch;acntXE3;bcbsmp;CustomIPTransport;vclribbon;fmx;IndyIPServer;rtl;IndySystem;fmxase;vcl;IndyCore;acntXE3_R;IndyIPCommon;inetdbbde;DBXInterBaseDriver;inet;DataSnapCommon;fmxobj;vclx;xmlrtl;inetdbxpress;DbxCommonDriver;vclimg;fmxdae;dbxcds;IndyProtocols;MetropolisUILiveTile;vclactnband;bindengine;dbexpress;vcldb;bcbie;IndyIPClient;$(PackageImports)</PackageImports>
         <IncludePath>$(BDSINCLUDE)\windows\vcl;$(IncludePath)</IncludePath>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.2.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
-        <VerInfo_Release>1</VerInfo_Release>
-        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Release>2</VerInfo_Release>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.2.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
     </PropertyGroup>
@@ -113,38 +112,40 @@
         <ILINK_LibraryPath>$(BDSLIB)\$(PLATFORM)\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_Release>1</VerInfo_Release>
+        <VerInfo_Release>2</VerInfo_Release>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <Defines>_DEBUG;$(Defines)</Defines>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
-        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.2.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
-        <VerInfo_Release>1</VerInfo_Release>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Release>2</VerInfo_Release>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <Defines>_DEBUG;$(Defines)</Defines>
-        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.2.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Release>1</VerInfo_Release>
+        <VerInfo_Release>2</VerInfo_Release>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <Defines>NDEBUG;$(Defines)</Defines>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib;vclimg.lib;vclx.lib;acntXE3_R.lib</LinkPackageStatics>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.2.0;InternalName=;LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-        <VerInfo_Release>1</VerInfo_Release>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Release>2</VerInfo_Release>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <Defines>NDEBUG;$(Defines)</Defines>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
-        <VerInfo_Keys>FileVersion=3.1.1.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.2.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib;acntXE3_R.lib;vclimg.lib;vclx.lib</LinkPackageStatics>
     </PropertyGroup>
     <ItemGroup>
@@ -222,24 +223,10 @@
                     <VersionInfoKeys Name="CFBundleExecutable"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclmid170.bpl">Embarcadero MyBase DataAccess Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcldb170.bpl">Embarcadero Database Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclbindcomp170.bpl">Embarcadero LiveBindings Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcldbx170.bpl">Embarcadero dbExpress Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclwbm170.bpl">Embarcadero InternetExpress Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompfmx170.bpl">Embarcadero LiveBindings Components FireMonkey</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompvcl170.bpl">Embarcadero LiveBindings Components VCL</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclbde170.bpl">Embarcadero BDE DB Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclib170.bpl">Embarcadero InterBase Express Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclado170.bpl">Embarcadero ADO DB Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclwebsnap170.bpl">Embarcadero WebSnap Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclsoap170.bpl">Embarcadero SOAP Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompdbx170.bpl">LiveBindings Expression Components DbExpress</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcldbxcds170.bpl">Embarcadero SimpleDataset Component (DBX)</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclFMXtee9170.bpl">TeeChart Lite FMX Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcltee9170.bpl">TeeChart Standard VCL Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\bcboffice2k170.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\bcbofficexp170.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k170.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp170.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
                 <ProjectProperties>
                     <ProjectProperties Name="AutoShowDeps">False</ProjectProperties>

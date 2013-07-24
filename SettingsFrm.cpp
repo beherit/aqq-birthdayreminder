@@ -16,6 +16,7 @@
 #pragma link "sCheckBox"
 #pragma link "sComboBox"
 #pragma link "sSkinManager"
+#pragma link "sSkinProvider"
 #pragma resource "*.dfm"
 TSettingsForm *SettingsForm;
 //---------------------------------------------------------------------------

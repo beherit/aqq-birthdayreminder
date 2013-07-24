@@ -18,6 +18,7 @@
 #include <Vcl.Controls.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.StdCtrls.hpp>
+#include "sSkinProvider.hpp"
 //---------------------------------------------------------------------------
 class TSettingsForm : public TForm
 {
@@ -32,6 +33,7 @@ __published:	// IDE-managed Components
 	TAction *aExit;
 	TsSkinManager *sSkinManager;
 	TIdDecoderMIME *IdDecoderMIME;
+	TsSkinProvider *sSkinProvider;
 	void __fastcall aExitExecute(TObject *Sender);
 	void __fastcall OKButtonClick(TObject *Sender);
 	void __fastcall FormCreate(TObject *Sender);

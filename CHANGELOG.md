@@ -1,3 +1,10 @@
+3.1.2.0
+-----
+* Wsparcie dla wtyczki AlphaWindows (ustawianie przeŸroczystoœci obramowania).
+* Zmniejszenie rozmiaru wtyczki 32-bitowej poprzez u¿ycie kompresji LZMA.
+* Brak kompresji wtyczki 64-bitowej.
+* Aktualizacja komponentów AlphaControls do najnowszej dostêpnej wersji (8.30).
+
 3.1.1.0
 -----
 * Drobne zmiany w skórkowaniu formy ustawieñ.
