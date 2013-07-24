@@ -44,7 +44,7 @@ extern "C"  __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQV
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = (wchar_t *)L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,6,2);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,6,4);
   PluginInfo.Description = (wchar_t *)L"Wtyczka przypomina o urodzinach kontaktów";
   PluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
