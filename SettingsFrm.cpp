@@ -103,7 +103,8 @@ void __fastcall TSettingsForm::aFindContactsExecute(TObject *Sender)
   TDateTime Todey = TDateTime::CurrentDate();
   AnsiString tCurrentDate = Todey; //Pobranie aktualnej daty zakodowanej
   DecodeDate(tCurrentDate, tYear, tMonth, tDay); //Rozkodowanie daty
-  Word bYear=0,bMonth=0,bDay=0; //Do rozkodowanej daty urodzin kontaktu
+  Word WbYear=0,WbMonth=0,WbDay=0; //Do rozkodowanej daty urodzin kontaktu
+  AnsiString AbYear=0,AbMonth=0,AbDay=0; //j.w.
   AnsiString BirthDay; //Data urodzin kontaktu
 
   //do porównania dat
@@ -125,147 +126,166 @@ void __fastcall TSettingsForm::aFindContactsExecute(TObject *Sender)
 
   for(int i=0;i<FileListBox->Items->Count;i++)
   {
-    BirthDay, bYear, bMonth, bDay = NULL;
-
     FileListBox->ItemIndex=i;
 
     FileName = FileListBox->FileName;
     FileName = StringReplace(FileName, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
     TIniFile *Ini = new TIniFile(FileName);
+    Ini = new TIniFile(FileName);
     BirthDay = IdDecoderMIME->DecodeToString((Ini->ReadString("Buddy", "Birth", "A===").c_str()));
     delete Ini;
 
     try
     {
-      DecodeDate(BirthDay, bYear, bMonth, bDay);
+      //DecodeDate(BirthDay, bYear, bMonth, bDay);
 
-      DataAktualna = EncodeDate(tYear, tMonth, tDay);
-      DataKontaktu = EncodeDate(tYear, bMonth, bDay);
-      RoznicaDat = difftime(DataKontaktu, DataAktualna);
+      if(AnsiPos("-",BirthDay)>0)
+      {
+        //Wyciagniecie roku urodzin
+        AbYear = BirthDay;
+        AbYear = AbYear.Delete(AnsiPos("-",AbYear),AbYear.Length());
+
+        //Wyciagniecie miesiaca urodzin
+        AbMonth = BirthDay;
+        AbMonth = AbMonth.Delete(1,AnsiPos("-",AbMonth));
+        AbMonth = AbMonth.Delete(AnsiPos("-",AbMonth),AbMonth.Length());
+
+        //Wyciagniecie dnia urodzin
+        AbDay = BirthDay;
+        AbDay = AbDay.Delete(1,AnsiPos("-",AbDay));
+        AbDay = AbDay.Delete(1,AnsiPos("-",AbDay));
+
+        //Zakodowanie do domyslnego formatu i odkodowanie
+        BirthDay = "";
+        BirthDay = EncodeDate(StrToInt(AbYear),StrToInt(AbMonth),StrToInt(AbDay));
+        DecodeDate(BirthDay,WbYear,WbMonth,WbDay);  
+
+        //Porownanie dat
+        DataAktualna = EncodeDate(tYear, tMonth, tDay);
+        DataKontaktu = EncodeDate(tYear, WbMonth, WbDay);
+        RoznicaDat = difftime(DataKontaktu, DataAktualna);
+
+        if((InBirthDay==1)&&(RoznicaDat==0))
+        {
+          AnsiString Nick = GetContactNick(ExtractFileName(FileListBox->FileName).SetLength(ExtractFileName(FileListBox->FileName).Length()-4));
+
+          int index = NicksList->Perform(LB_SELECTSTRING, -1,(LPARAM)Nick.c_str());
+          if(index==-1)
+          {
+            WbYear = tYear - WbYear;
+
+            AnsiString TextTmp = Nick + " obchodzi dziœ urodziny!";
+            if(ShowAge==1)
+             TextTmp = TextTmp + " (" + WbYear + ")";
+
+            ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
+
+            SoundPlay=0;
+            NicksList->Items->Add(Nick);
+          }
+        }
+
+        if((RoznicaDat==1)||(RoznicaDat==2)||(RoznicaDat==3)||(RoznicaDat==4)||(RoznicaDat==5)||(RoznicaDat==6)||(RoznicaDat==7)||(RoznicaDat==8))
+        {
+          if(AnotherDay!=0)
+          {
+            AnsiString Nick = GetContactNick(ExtractFileName(FileListBox->FileName).SetLength(ExtractFileName(FileListBox->FileName).Length()-4));
+
+            int index = NicksList->Perform(LB_SELECTSTRING, -1,(LPARAM)Nick.c_str());
+            if(index==-1)
+            {
+              WbYear = tYear - WbYear;
+              AnsiString TextTmp;
+
+              if(AnotherDay==1)
+              {
+                TextTmp = Nick + " obchodzi jutro urodziny!";
+                if(ShowAge==1)
+                 TextTmp = TextTmp + " (" + WbYear + ")";
+              }
+
+              if(AnotherDay==2)
+              {
+                TextTmp = Nick + " za dwa dni obchodzi urodziny!";
+                if(ShowAge==1)
+                 TextTmp = TextTmp + " (" + WbYear + ")";
+              }
+
+              if(AnotherDay==3)
+              {
+                TextTmp = Nick + " za trzy dni obchodzi urodziny!";
+                if(ShowAge==1)
+                 TextTmp = TextTmp + " (" + WbYear + ")";
+              }
+
+              if(AnotherDay==4)
+              {
+                TextTmp = Nick + " za cztery dni obchodzi urodziny!";
+                if(ShowAge==1)
+                 TextTmp = TextTmp + " (" + WbYear + ")";
+              }
+
+              if(AnotherDay==5)
+              {
+                TextTmp = Nick + " za piêæ dni obchodzi urodziny!";
+                if(ShowAge==1)
+                 TextTmp = TextTmp + " (" + WbYear + ")";
+              }
+
+              if(AnotherDay==6)
+              {
+                TextTmp = Nick + " za szeœæ dni obchodzi urodziny!";
+                if(ShowAge==1)
+                 TextTmp = TextTmp + " (" + WbYear + ")";
+              }
+
+              if(AnotherDay==7)
+              {
+                TextTmp = Nick + " za tydzieñ obchodzi urodziny!";
+                if(ShowAge==1)
+                 TextTmp = TextTmp + " (" + WbYear + ")";
+              }
+
+              if(AnotherDay==8)
+              {
+                TextTmp = Nick + " za dwa tygodnie obchodzi urodziny!";
+                if(ShowAge==1)
+                 TextTmp = TextTmp + " (" + WbYear + ")";
+              }
+
+              if((RoznicaDat==1)&&(AnotherDay==1))
+               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
+
+              else if((RoznicaDat==2)&&(AnotherDay==2))
+               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
+
+              else if((RoznicaDat==3)&&(AnotherDay==3))
+               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
+
+              else if((RoznicaDat==4)&&(AnotherDay==4))
+               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
+
+              else if((RoznicaDat==5)&&(AnotherDay==5))
+               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
+
+              else if((RoznicaDat==6)&&(AnotherDay==6))
+               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
+
+              else if((RoznicaDat==7)&&(AnotherDay==7))
+               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
+
+              else if((RoznicaDat==14)&&(AnotherDay==8))
+               ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
+
+              SoundPlay=0;
+              NicksList->Items->Add(Nick);
+            }
+          }
+        }
+      }
     }
     catch (...) { /*b³¹d - nie rób nic*/ }
-
-    if(InBirthDay==1)
-    {
-      if((StrToInt(bMonth)==StrToInt(tMonth))&&(StrToInt(bDay)==StrToInt(tDay)))
-      {
-        AnsiString Nick = GetContactNick(ExtractFileName(FileListBox->FileName).SetLength(ExtractFileName(FileListBox->FileName).Length()-4));
-
-        int index = NicksList->Perform(LB_SELECTSTRING, -1,(LPARAM)Nick.c_str());
-        if(index==-1)
-        {
-          bYear = tYear - bYear;
-
-          AnsiString TextTmp = Nick + " obchodzi dziœ urodziny!";
-          if(ShowAge==1)
-           TextTmp = TextTmp + " (" + bYear + ")";
-
-          ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-          SoundPlay=0;
-          NicksList->Items->Add(Nick);
-        }
-      }
-    }
-
-    if((RoznicaDat==1)||(RoznicaDat==2)||(RoznicaDat==3)||(RoznicaDat==4)||(RoznicaDat==5)||(RoznicaDat==6)||(RoznicaDat==7)||(RoznicaDat==8))
-    {
-      if(AnotherDay!=0)
-      {
-        AnsiString Nick = GetContactNick(ExtractFileName(FileListBox->FileName).SetLength(ExtractFileName(FileListBox->FileName).Length()-4));
-
-        int index = NicksList->Perform(LB_SELECTSTRING, -1,(LPARAM)Nick.c_str());
-        if(index==-1)
-        {
-          bYear = tYear - bYear;
-          AnsiString TextTmp;
-
-          if(AnotherDay==1)
-          {
-            TextTmp = Nick + " obchodzi jutro urodziny!";
-            if(ShowAge==1)
-             TextTmp = TextTmp + " (" + bYear + ")";
-          }
-
-          if(AnotherDay==2)
-          {
-            TextTmp = Nick + " za dwa dni obchodzi urodziny!";
-            if(ShowAge==1)
-             TextTmp = TextTmp + " (" + bYear + ")";
-          }
-
-          if(AnotherDay==3)
-          {
-            TextTmp = Nick + " za trzy dni obchodzi urodziny!";
-            if(ShowAge==1)
-             TextTmp = TextTmp + " (" + bYear + ")";
-          }
-
-          if(AnotherDay==4)
-          {
-            TextTmp = Nick + " za cztery dni obchodzi urodziny!";
-            if(ShowAge==1)
-             TextTmp = TextTmp + " (" + bYear + ")";
-          }
-
-          if(AnotherDay==5)
-          {
-            TextTmp = Nick + " za piêæ dni obchodzi urodziny!";
-            if(ShowAge==1)
-             TextTmp = TextTmp + " (" + bYear + ")";
-          }
-
-          if(AnotherDay==6)
-          {
-            TextTmp = Nick + " za szeœæ dni obchodzi urodziny!";
-            if(ShowAge==1)
-             TextTmp = TextTmp + " (" + bYear + ")";
-          }
-
-          if(AnotherDay==7)
-          {
-            TextTmp = Nick + " za tydzieñ obchodzi urodziny!";
-            if(ShowAge==1)
-             TextTmp = TextTmp + " (" + bYear + ")";
-          }
-
-          if(AnotherDay==8)
-          {
-            TextTmp = Nick + " za dwa tygodnie obchodzi urodziny!";
-            if(ShowAge==1)
-             TextTmp = TextTmp + " (" + bYear + ")";
-          }
-
-          if((RoznicaDat==1)&&(AnotherDay==1))
-           ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-          else if((RoznicaDat==2)&&(AnotherDay==2))
-           ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-          else if((RoznicaDat==3)&&(AnotherDay==3))
-           ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-          else if((RoznicaDat==4)&&(AnotherDay==4))
-           ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-          else if((RoznicaDat==5)&&(AnotherDay==5))
-           ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-          else if((RoznicaDat==6)&&(AnotherDay==6))
-           ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-          else if((RoznicaDat==7)&&(AnotherDay==7))
-           ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-          else if((RoznicaDat==14)&&(AnotherDay==8))
-           ShowBirthdayInfo(TextTmp, TimeOut, ePluginDirectory, SoundPlay);
-
-          SoundPlay=0;
-          NicksList->Items->Add(Nick);
-        }
-      }
-    }
   }
 }
 //---------------------------------------------------------------------------

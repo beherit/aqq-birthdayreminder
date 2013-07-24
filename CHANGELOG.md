@@ -1,3 +1,8 @@
+1.0.6.4
+-----
+* Usuniêto b³¹d powiadamiania o urodzinach kontaktów, które tak na prawdê ich nie obchodz¹.
+* Poprawiono porównywanie daty urodzin z aktualn¹ przy ró¿nych formatach daty ustawionych w systemie.
+
 1.0.6.2
 -----
 * Ma³a poprawka odczytu daty urodzin z plików.
