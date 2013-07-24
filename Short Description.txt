@@ -1,0 +1,1 @@
+Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy. Do poprawnego dzia³ania wtyczki niezbêdne jest, aby data urodzin by³a zapisana w wizytówce w postaci RRRR-MM-DD.
