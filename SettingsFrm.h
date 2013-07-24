@@ -11,9 +11,13 @@
 class TSettingsForm : public TForm
 {
 __published:	// IDE-managed Components
-        TLabel *Info;
+        TLabel *TimeNot;
         TButton *OkButton;
         TComboBox *TimeBox;
+        TCheckBox *SoundCheckBox;
+        TCheckBox *BirthDayCheckBox;
+        TComboBox *AnotherDayBox;
+        TLabel *Another;
         void __fastcall FormShow(TObject *Sender);
         void __fastcall OkButtonClick(TObject *Sender);
 private:	// User declarations
