@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------
 #ifndef SettingsFrmH
 #define SettingsFrmH
+#define WM_ALPHAWINDOWS (WM_USER + 666)
 //---------------------------------------------------------------------------
 #include "acPNG.hpp"
 #include "sBevel.hpp"
@@ -42,6 +43,10 @@ private:	// User declarations
 public:		// User declarations
 	bool AddSource;
 	__fastcall TSettingsForm(TComponent* Owner);
+	void __fastcall WMTransparency(TMessage &Message);
+	BEGIN_MESSAGE_MAP
+	MESSAGE_HANDLER(WM_ALPHAWINDOWS,TMessage,WMTransparency);
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TSettingsForm *SettingsForm;

@@ -1,3 +1,7 @@
+3.1.3.0
+-----
+* Zmiany w wsparciu dla wtyczki AlphaWindows.
+
 3.1.2.0
 -----
 * Wsparcie dla wtyczki AlphaWindows (ustawianie przeüroczystoúci obramowania).
