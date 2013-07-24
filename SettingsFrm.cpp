@@ -16,6 +16,7 @@ __declspec(dllimport)void ShowBirthdayInfo(UnicodeString CText, int CTimeOut, bo
 __declspec(dllimport)UnicodeString GetPluginPath();
 __declspec(dllimport)UnicodeString GetContactsPath();
 __declspec(dllimport)UnicodeString GetContactNick(UnicodeString JID);
+__declspec(dllimport)bool AQQSoundOff();
 //---------------------------------------------------------------------------
 UnicodeString ePluginDirectory;
 UnicodeString eContactsPath;
@@ -120,6 +121,8 @@ void __fastcall TSettingsForm::aFindContactsExecute(TObject *Sender)
   TimeOut = TimeOut * 1000;
   int AnotherDay = Ini->ReadInteger("Settings", "Another", 0);
   bool SoundPlay = Ini->ReadBool("Settings", "Sound", 1);
+  if(SoundPlay==true)
+   SoundPlay=AQQSoundOff();
   bool InBirthDay = Ini->ReadBool("Settings", "InBirthDay", 1);
   bool ShowAge = Ini->ReadBool("Settings", "ShowAge", 1);
   delete Ini;
@@ -303,6 +306,12 @@ void __fastcall TSettingsForm::aReadSettingsExecute(TObject *Sender)
   RepeatCheckBox->ItemIndex = Ini->ReadInteger("Settings", "Repeat", 0);
 
   delete Ini;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TSettingsForm::aExitExecute(TObject *Sender)
+{
+  Close();
 }
 //---------------------------------------------------------------------------
 

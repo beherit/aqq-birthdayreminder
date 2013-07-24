@@ -23,14 +23,14 @@ TPluginLink PluginLink;
 TPluginInfo PluginInfo;
 
 //Program
-extern "C"  __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
+extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = (wchar_t *)L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,0,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,1,0);
   PluginInfo.Description = (wchar_t *)L"Przypominanie o urodzinach kontaktów";
   PluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
-  PluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
+  PluginInfo.AuthorMail = (wchar_t *)L"sirbeherit@gmail.com";
   PluginInfo.Copyright = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   PluginInfo.Homepage = (wchar_t *)L"http://beherit.pl";
 
@@ -169,6 +169,18 @@ UnicodeString GetContactNick(UnicodeString JID)
 }
 //---------------------------------------------------------------------------
 
+bool AQQSoundOff()
+{
+  UnicodeString SoundOff = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
+  int x = AnsiPos("\nSoundOff=",SoundOff);
+  SoundOff.Delete(1,x+9);
+  x = AnsiPos("\n",SoundOff);
+  SoundOff.Delete(x-1,SoundOff.Length());
+
+  return !StrToBool(SoundOff);
+}
+//---------------------------------------------------------------------------
+
 void ShowBirthdayInfo(UnicodeString CText, int CTimeOut, bool CSoundPlay)
 {
   UnicodeString PluginPath;
@@ -182,7 +194,7 @@ void ShowBirthdayInfo(UnicodeString CText, int CTimeOut, bool CSoundPlay)
   PluginShowInfo.TimeOut = CTimeOut;
   PluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&PluginShowInfo));
 
-  if(CSoundPlay==1)
+  if(CSoundPlay==true)
   {
 	if(FileExists(PluginPath + "\\\\BirthdayReminder\\\\birthday.wav"))
 	 PlaySound((PluginPath + "\\\\BirthdayReminder\\\\birthday.wav").c_str(), NULL, SND_ASYNC | SND_FILENAME);
