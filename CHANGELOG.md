@@ -1,3 +1,8 @@
+3.1.0.0
+-----
+* Dodanie 64-bitowej wersji wtyczki.
+* Aktualizacja komponentów AlphaControls do najnowszej dostêpnej wersji (8.16).
+
 3.0.0.0
 -----
 * Wtyczka zosta³a napisana ca³kowicie od nowa.

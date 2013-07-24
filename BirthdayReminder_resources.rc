@@ -1,2 +1,2 @@
-PLUGIN_RES RCDATA "Data\\BirthdayReminder.dll.png"
-GITF RCDATA "Data\\Gift.png"
+SHARED DATA "Data\\BirthdayReminder.dll.png"
+GITF DATA "Data\\Gift.png"
