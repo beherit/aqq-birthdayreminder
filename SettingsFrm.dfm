@@ -1,11 +1,11 @@
 object SettingsForm: TSettingsForm
-  Left = 532
-  Top = 90
+  Left = 294
+  Top = 126
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Ustawienia'
-  ClientHeight = 193
-  ClientWidth = 237
+  ClientHeight = 185
+  ClientWidth = 239
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -81,12 +81,19 @@ object SettingsForm: TSettingsForm
     Height = 13
     Caption = 'Pokazuj powiadomienie:'
   end
+  object Bevel: TBevel
+    Left = 0
+    Top = 152
+    Width = 239
+    Height = 33
+    Align = alBottom
+  end
   object OkButton: TButton
     Left = 8
-    Top = 160
+    Top = 156
     Width = 75
     Height = 25
-    Caption = 'OK'
+    Caption = 'Zapisz'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -122,7 +129,7 @@ object SettingsForm: TSettingsForm
   object SoundCheckBox: TCheckBox
     Left = 8
     Top = 34
-    Width = 218
+    Width = 185
     Height = 17
     Caption = 'Odtwarzaj muzyk'#281' przy notyfikacji'
     Checked = True
@@ -132,7 +139,7 @@ object SettingsForm: TSettingsForm
   object BirthDayCheckBox: TCheckBox
     Left = 8
     Top = 54
-    Width = 218
+    Width = 161
     Height = 17
     Caption = 'Powiadamiaj w dniu urodzin'
     Checked = True
@@ -161,7 +168,7 @@ object SettingsForm: TSettingsForm
   object AgeCheckBox: TCheckBox
     Left = 8
     Top = 74
-    Width = 218
+    Width = 153
     Height = 17
     Caption = 'Pokazuj wiek solenizanta'
     Checked = True
@@ -169,8 +176,8 @@ object SettingsForm: TSettingsForm
     TabOrder = 5
   end
   object TestButon: TButton
-    Left = 152
-    Top = 160
+    Left = 156
+    Top = 156
     Width = 75
     Height = 25
     Caption = 'Podgl'#261'd'
@@ -193,11 +200,53 @@ object SettingsForm: TSettingsForm
       'Co trzy godziny'
       'Co cztery godziny')
   end
+  object FileListBox: TFileListBox
+    Left = 248
+    Top = 8
+    Width = 137
+    Height = 137
+    FileType = [ftReadOnly, ftHidden, ftSystem, ftArchive, ftNormal]
+    ItemHeight = 13
+    Mask = '*.ini'
+    TabOrder = 8
+    Visible = False
+  end
+  object NicksList: TListBox
+    Left = 392
+    Top = 8
+    Width = 137
+    Height = 137
+    ItemHeight = 13
+    TabOrder = 9
+    Visible = False
+  end
   object Tajmer: TTimer
     Enabled = False
     Interval = 10000
     OnTimer = TajmerTimer
-    Left = 104
-    Top = 160
+    Left = 88
+    Top = 152
+  end
+  object XPMan1: TXPMan
+    Left = 120
+    Top = 152
+  end
+  object IdDecoderMIME: TIdDecoderMIME
+    FillChar = '='
+    Left = 32
+  end
+  object ActionList: TActionList
+    object aFindContacts: TAction
+      Caption = 'aFindContacts'
+      OnExecute = aFindContactsExecute
+    end
+    object aSaveSettings: TAction
+      Caption = 'aSaveSettings'
+      OnExecute = aSaveSettingsExecute
+    end
+    object aReadSettings: TAction
+      Caption = 'aReadSettings'
+      OnExecute = aReadSettingsExecute
+    end
   end
 end
