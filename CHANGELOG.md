@@ -1,3 +1,9 @@
+2.0.0.0
+-----
+* Przepisanie wtyczki pod kompilator CodeGear C++ Builder 2009.
+* Obs³uga Unicode dla nazw kontaktów.
+* Poprawki w odtwarzaniu dŸwiêku.
+
 1.0.6.4
 -----
 * Usuniêto b³¹d powiadamiania o urodzinach kontaktów, które tak na prawdê ich nie obchodz¹.

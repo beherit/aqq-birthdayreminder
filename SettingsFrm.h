@@ -28,10 +28,9 @@ __published:	// IDE-managed Components
         TLabel *Another;
         TCheckBox *AgeCheckBox;
         TButton *TestButon;
-        TTimer *Tajmer;
+	TTimer *Timer;
         TLabel *RepeatLabel;
         TComboBox *RepeatCheckBox;
-        TXPMan *XPMan1;
         TBevel *Bevel;
         TIdDecoderMIME *IdDecoderMIME;
         TFileListBox *FileListBox;
@@ -43,7 +42,7 @@ __published:	// IDE-managed Components
         void __fastcall FormShow(TObject *Sender);
         void __fastcall OkButtonClick(TObject *Sender);
         void __fastcall TestButonClick(TObject *Sender);
-        void __fastcall TajmerTimer(TObject *Sender);
+        void __fastcall TimerTimer(TObject *Sender);
         void __fastcall aFindContactsExecute(TObject *Sender);
         void __fastcall aSaveSettingsExecute(TObject *Sender);
         void __fastcall aReadSettingsExecute(TObject *Sender);
