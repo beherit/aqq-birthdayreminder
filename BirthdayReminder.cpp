@@ -1,9 +1,9 @@
 #include <vcl.h>
 #include <windows.h>
+#include <PluginAPI.h>
 #pragma hdrstop
 #pragma argsused
 #include "SettingsFrm.h"
-#include <PluginAPI.h>
 #include <inifiles.hpp>
 #include <time.h>
 #include <IdHashMessageDigest.hpp>
@@ -136,22 +136,6 @@ UnicodeString GetContactNick(UnicodeString JID)
 	return JID;
   }
   return Nick;
-  /*//Wypelnienie pola JID w strukturze
-  TPluginContactSimpleInfo PluginContactSimpleInfo;
-  PluginContactSimpleInfo.cbSize = sizeof(TPluginContactSimpleInfo);
-  PluginContactSimpleInfo.JID = JID.w_str();
-  //Wywolanie wypelnienia calej struktury
-  PluginLink.CallService(AQQ_CONTACTS_FILLSIMPLEINFO,0,(LPARAM)&PluginContactSimpleInfo);
-  //Pobranie informacji z wypelnionej struktury
-  UnicodeString Nick = (wchar_t*)PluginContactSimpleInfo.Nick;
-  Nick = Nick.Trim();
-  if(Nick.IsEmpty())
-  {
-	if(JID.Pos("@")) JID.Delete(JID.Pos("@"),JID.Length());
-	return JID;
-  }
-  else
-   return Nick;*/
 }
 //---------------------------------------------------------------------------
 
@@ -241,7 +225,7 @@ int __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam)
   PluginLink.CallService(AQQ_CONTACTS_REQUESTLIST,(WPARAM)ReplyListID,0);
   //Sprawdzenie czy wtyczka zostala dodana do zrodel powiadomien
   if(SourceAddedChk) BuildNewsDataItem();
-  
+
   return 0;
 }
 //---------------------------------------------------------------------------
@@ -660,18 +644,14 @@ int __stdcall ServiceBirthdayReminderAddSource(WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Zapisywanie zasobów
-bool SaveResourceToFile(wchar_t* FileName, wchar_t* Res)
+void ExtractRes(wchar_t* FileName, wchar_t* ResName, wchar_t* ResType)
 {
-  HRSRC hrsrc = FindResource(HInstance, Res, RT_RCDATA);
-  if(!hrsrc) return false;
-  DWORD size = SizeofResource(HInstance, hrsrc);
-  HGLOBAL hglob = LoadResource(HInstance, hrsrc);
-  LPVOID rdata = LockResource(hglob);
-  HANDLE hFile = CreateFile(FileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-  DWORD writ;
-  WriteFile(hFile, rdata, size, &writ, NULL);
-  CloseHandle(hFile);
-  return true;
+  TPluginTwoFlagParams PluginTwoFlagParams;
+  PluginTwoFlagParams.cbSize = sizeof(TPluginTwoFlagParams);
+  PluginTwoFlagParams.Param1 = ResName;
+  PluginTwoFlagParams.Param2 = ResType;
+  PluginTwoFlagParams.Flag1 = (int)HInstance;
+  PluginLink.CallService(AQQ_FUNCTION_SAVERESOURCE,(WPARAM)&PluginTwoFlagParams,(LPARAM)FileName);
 }
 //---------------------------------------------------------------------------
 
@@ -739,15 +719,15 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
   if(!DirectoryExists(PluginUserDir + "\\\\Shared"))
    CreateDir(PluginUserDir + "\\\\Shared");
   if(!FileExists(PluginUserDir + "\\\\Shared\\\\BirthdayReminder.dll.png"))
-   SaveResourceToFile((PluginUserDir + "\\\\Shared\\\\BirthdayReminder.dll.png").w_str(),L"PLUGIN_RES");
+   ExtractRes((PluginUserDir + "\\\\Shared\\\\BirthdayReminder.dll.png").w_str(),L"SHARED",L"DATA");
   else if(MD5File(PluginUserDir + "\\\\Shared\\\\BirthdayReminder.dll.png")!="E597085BBB5D15D4882B7FFF8A478B50")
-   SaveResourceToFile((PluginUserDir + "\\\\Shared\\\\BirthdayReminder.dll.png").w_str(),L"PLUGIN_RES");  
+   ExtractRes((PluginUserDir + "\\\\Shared\\\\BirthdayReminder.dll.png").w_str(),L"SHARED",L"DATA");
   //Wypakiwanie ikonki Gift.png
   //D1A83D9E809742142A7BDA9B8AF37EB7
   if(!FileExists(PluginUserDir + "\\\\BirthdayReminder\\\\Gift.png"))
-   SaveResourceToFile((PluginUserDir + "\\\\BirthdayReminder\\\\Gift.png").w_str(),L"GITF");
+   ExtractRes((PluginUserDir + "\\\\BirthdayReminder\\\\Gift.png").w_str(),L"GITF",L"DATA");
   else if(MD5File(PluginUserDir + "\\\\BirthdayReminder\\\\Gift.png")!="D1A83D9E809742142A7BDA9B8AF37EB7")
-   SaveResourceToFile((PluginUserDir + "\\\\BirthdayReminder\\\\Gift.png").w_str(),L"GITF");
+   ExtractRes((PluginUserDir + "\\\\BirthdayReminder\\\\Gift.png").w_str(),L"GITF",L"DATA");
   //Przypisanie ikonki do interfejsu AQQ
   GITF = PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(PluginUserDir + "\\\\BirthdayReminder\\\\Gift.png").w_str());
   //Odczyt ustawien  
@@ -815,11 +795,11 @@ extern "C" int __declspec(dllexport) __stdcall Unload()
 //---------------------------------------------------------------------------
 
 //Informacje o wtyczce
-extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
+extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVersion)
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,0,0,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,1,0,0);
   PluginInfo.Description = L"Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
