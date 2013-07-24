@@ -1,3 +1,7 @@
+1.0.5.2
+-----
+* Zmieniono dzia³anie pokazywania powiadomienia “raz dziennie” - teraz na prawdê pokazuje siê tylko raz dziennie. Poza tym domyœlnie i tak chmurka bêdzie siê pokazywaæ przy ka¿dym w³¹czeniu AQQ!
+
 1.0.5.0
 -----
 * Wtyczka pokazuje notyfikacjê z 10 sekundowym opóŸnieniem ni¿ po za³adowaniu tak jak w poprzedniej wersji.

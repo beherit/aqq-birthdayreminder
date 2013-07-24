@@ -1,6 +1,6 @@
 object SettingsForm: TSettingsForm
-  Left = 448
-  Top = 111
+  Left = 532
+  Top = 90
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Ustawienia'
@@ -186,6 +186,7 @@ object SettingsForm: TSettingsForm
     ItemHeight = 13
     TabOrder = 7
     Items.Strings = (
+      'Przy w'#322#261'czeniu'
       'Raz dziennie'
       'Co godzin'#281
       'Co dwie godziny'
