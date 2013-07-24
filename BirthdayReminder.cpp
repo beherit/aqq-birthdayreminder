@@ -12,6 +12,9 @@
 #include <mmsystem.h> //do wav
 #include "Aqq.h"
 #include "SettingsFrm.h"
+
+#include <time.h>
+
 using std::string; //do Base64
 //---------------------------------------------------------------------------
 
@@ -32,7 +35,7 @@ wchar_t *AnsiTowchar_t(AnsiString Str) //zamiana AnsiString->wchar_t*
 TSettingsForm *handle; //tworzenie uchwytu do formy
 
 //utworzenie obiektow do struktur
-PluginAction TPluginActionSkrot;
+//PluginAction TPluginActionSkrot;
 PluginShowInfo TPluginShowInfo;
 PluginLink TPluginLink;
 PluginInfo TPluginInfo;
@@ -42,31 +45,32 @@ AnsiString UserPath;
 AnsiString PluginPath;
 AnsiString ContactsPath;
 AnsiString ImagePathTmp;
-AnsiString BirthDay;
+
 TDateTime Todey = TDateTime::CurrentDate();
-AnsiString tmpCurrentDate = Todey;
-AnsiString CurrentDate = tmpCurrentDate.Delete(1,5);
-AnsiString Year_Current = CurrentYear();
-AnsiString Year_Birth;
+AnsiString tCurrentDate = Todey;
+Word tYear,tMonth,tDay;
+Word bYear=0,bMonth=0,bDay=0;
+AnsiString BirthDay;
+
 int Song=0;
 int TimeOut;
-int plugin_icon_idx;
+//int plugin_icon_idx;
 
 //serwis szybkiego dostêpu
-int __stdcall BirthdayReminderSettingsService (WPARAM, LPARAM)
-{
-  if (handle==NULL)
-  {
-  Application->Handle = SettingsForm;
-  handle = new TSettingsForm(Application);
-  handle->setPluginPath=PluginPath;
-  handle->Show();
-  }
-  else
-    handle->Show();
-
-  return 0;
-}
+//int __stdcall BirthdayReminderSettingsService (WPARAM, LPARAM)
+//{
+//  if (handle==NULL)
+//  {
+//  Application->Handle = SettingsForm;
+//  handle = new TSettingsForm(Application);
+//  handle->setPluginPath=PluginPath;
+//  handle->Show();
+//  }
+//  else
+//    handle->Show();
+//
+//  return 0;
+//}
 
 //Base64---------------------------------------------------------------------
 const char          fillchar = '=';
@@ -147,30 +151,55 @@ void FindContacts(String Dir, String typ)
         else if(ExtractFileExt(sr.Name).SubString(2, 5) == typ)
         {
           TIniFile *Ini = new TIniFile(Dir + sr.Name);
-          BirthDay = Base64Decode((Ini->ReadString("Buddy", "Birth", "").c_str()));
-          Year_Birth = BirthDay;
-          Year_Birth = Year_Birth.SetLength(Year_Birth.Length()-6);
-          BirthDay = BirthDay.Delete(1,5);
-          if(AnsiSameStr(BirthDay, CurrentDate))
+          BirthDay = Base64Decode((Ini->ReadString("Buddy", "Birth", "nic").c_str()));
+
+          try
+          {
+            DecodeDate(BirthDay, bYear, bMonth, bDay);
+          }
+          catch (...)
+          {
+            //b³¹d - nie rób nic
+          }
+
+          if((StrToInt(bMonth)==StrToInt(tMonth))&&(StrToInt(bDay)==StrToInt(tDay)))
           {
             AnsiString Nick = Base64Decode((Ini->ReadString("Buddy", "Nick", "").c_str()));
+            //poprawa BASE64
+            Nick = StringReplace(Nick, "Ä™", "ê", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Ã³", "ó", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Ä…", "¹", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Å›", "œ", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Å‚", "³", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Å¼", "¿", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Åº", "Ÿ", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Ä‡", "æ", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Å„", "ñ", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Ä˜", "Ê", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Ã“", "Ó", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Ä„", "¥", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Åš", "Œ", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Å", "£", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Å»", "¯", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Å¹", "", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Ä†", "Æ", TReplaceFlags() << rfReplaceAll);
+            Nick = StringReplace(Nick, "Åƒ", "Ñ", TReplaceFlags() << rfReplaceAll);
+            //koniec
 
-            StrToInt(Year_Birth);
-            StrToInt(Year_Current);
-            Year_Birth = Year_Current - Year_Birth;
+            bYear = tYear - bYear;
 
-            AnsiString TextTmp = Nick + " obchodzi dziœ urodziny! (" + Year_Birth + ")";
-            
+            AnsiString TextTmp = Nick + " obchodzi dziœ urodziny! (" + bYear + ")";
+
             wchar_t* Text = AnsiTowchar_t(TextTmp);
             wchar_t* ImagePath = AnsiTowchar_t(ImagePathTmp);
-            
+
             TPluginShowInfo.cbSize = sizeof(PluginShowInfo);
             TPluginShowInfo.Event = tmeInfo;
             TPluginShowInfo.Text = Text;
             TPluginShowInfo.ImagePath = ImagePath;
             TPluginShowInfo.TimeOut = TimeOut;
             //TPluginShowInfo.ActionID;
-            //TPluginShowInfo.Tick; 
+            //TPluginShowInfo.Tick;
             TPluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&TPluginShowInfo));
 
             if(Song==0)
@@ -188,6 +217,7 @@ void FindContacts(String Dir, String typ)
               }
             }
           }
+          bYear=0,bMonth=0,bDay=0;
           delete Ini;
         }
       }
@@ -202,7 +232,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t *)L"Birthday Reminder";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,0,0);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,2,0);
   TPluginInfo.Description = (wchar_t *)L"Powiadomienie przypominaj¹ce o urodzinach kontaktów";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
@@ -212,19 +242,19 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
   return &TPluginInfo;
 }
 
-void PrzypiszSkrotMenu()
-{
-  TPluginActionSkrot.cbSize = sizeof(PluginAction);
-  TPluginActionSkrot.pszCaption = (wchar_t*) L"Birthday Reminder";
-  TPluginActionSkrot.Position = 0;
-  TPluginActionSkrot.IconIndex = plugin_icon_idx;
-  TPluginActionSkrot.pszService = (wchar_t*) L"serwis_BirthdayReminderSettingsService";
-  TPluginActionSkrot.pszPopupName = (wchar_t*) L"popPlugins";
-  TPluginActionSkrot.PopupPosition = 0;
-
-  TPluginLink.CallService(AQQ_CONTROLS_CREATEPOPUPMENUITEM,0,(LPARAM)(&TPluginActionSkrot));
-  TPluginLink.CreateServiceFunction(L"serwis_BirthdayReminderSettingsService",BirthdayReminderSettingsService);
-}
+//void PrzypiszSkrotMenu()
+//{
+//  TPluginActionSkrot.cbSize = sizeof(PluginAction);
+//  TPluginActionSkrot.pszCaption = (wchar_t*) L"Birthday Reminder";
+//  TPluginActionSkrot.Position = 0;
+//  TPluginActionSkrot.IconIndex = plugin_icon_idx;
+//  TPluginActionSkrot.pszService = (wchar_t*) L"serwis_BirthdayReminderSettingsService";
+//  TPluginActionSkrot.pszPopupName = (wchar_t*) L"popPlugins";
+//  TPluginActionSkrot.PopupPosition = 0;
+//
+//  TPluginLink.CallService(AQQ_CONTROLS_CREATEPOPUPMENUITEM,0,(LPARAM)(&TPluginActionSkrot));
+//  TPluginLink.CreateServiceFunction(L"serwis_BirthdayReminderSettingsService",BirthdayReminderSettingsService);
+//}
 
 int __stdcall OnModulesLoaded(WPARAM, LPARAM)
 {
@@ -262,21 +292,24 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
    CreateDir(PluginPath + "\\\\BirthdayReminder");
   if(!FileExists(PluginPath + "\\\\BirthdayReminder\\\\cake.png"))
    stream->SaveToFile(PluginPath + "\\\\BirthdayReminder\\\\cake.png");
-  stream->SaveToFile("cake.png");
+//  stream->SaveToFile("cake.png");
   //Wypakowanie ikony - Koniec
 
   TIniFile *Ini = new TIniFile(PluginPath + "\\\\BirthdayReminder\\\\Settings.ini");
   TimeOut = Ini->ReadInteger("Settings", "TimeOut", 6);
   TimeOut = TimeOut * 1000;
 
-  //Przypisanie ikony
-  wchar_t* plugin_icon_path = L"cake.png";
-  plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
+//  //Przypisanie ikony
+//  wchar_t* plugin_icon_path = L"cake.png";
+//  plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
+//
+//  //Usuniecie ikony
+//  DeleteFile("cake.png");
+//
+//  PrzypiszSkrotMenu();
 
-  //Usuniecie ikony
-  DeleteFile("cake.png");
-
-  PrzypiszSkrotMenu();
+  //Data
+  DecodeDate(tCurrentDate, tYear, tMonth, tDay);
 
   TPluginLink.HookEvent(AQQ_SYSTEM_MODULESLOADED, OnModulesLoaded);
 
@@ -285,9 +318,9 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
 
 extern "C" int __declspec(dllexport) __stdcall Unload()
 {
-  TPluginLink.DestroyServiceFunction(BirthdayReminderSettingsService);
-  TPluginLink.CallService(AQQ_ICONS_DESTROYPNGICON,0,(LPARAM)(plugin_icon_idx));
-  TPluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&TPluginActionSkrot));
+//  TPluginLink.DestroyServiceFunction(BirthdayReminderSettingsService);
+//  TPluginLink.CallService(AQQ_ICONS_DESTROYPNGICON,0,(LPARAM)(plugin_icon_idx));
+//  TPluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&TPluginActionSkrot));
   TPluginLink.UnhookEvent(&OnModulesLoaded);
 
   return 0;

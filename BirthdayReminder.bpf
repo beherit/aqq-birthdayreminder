@@ -1,5 +1,5 @@
-USEFORM("SettingsFrm.cpp", SettingsForm);
+nie nUSEFORM("SettingsFrm.cpp", SettingsForm);
 //---------------------------------------------------------------------------
 This file is used by the project manager only and should be treated like the project file
 
-DllEntryPoint 
+DllEntryPoint
