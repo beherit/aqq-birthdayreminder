@@ -1,3 +1,24 @@
+//---------------------------------------------------------------------------
+// Copyright (C) 2009-2013 Krzysztof Grochocki
+//
+// This file is part of Birthday Reminder
+//
+// Birthday Reminder is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 3, or (at your option)
+// any later version.
+//
+// Birthday Reminder is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with GNU Radio; see the file COPYING. If not, write to
+// the Free Software Foundation, Inc., 51 Franklin Street,
+// Boston, MA 02110-1301, USA.
+//---------------------------------------------------------------------------
+
 #include <vcl.h>
 #include <windows.h>
 #pragma hdrstop
@@ -135,6 +156,18 @@ bool ChkThemeGlowing()
   UnicodeString GlowingEnabled = Settings->ReadString("Theme","ThemeGlowing","1");
   delete Settings;
   return StrToBool(GlowingEnabled);
+}
+//---------------------------------------------------------------------------
+
+//Pobieranie ustawien koloru AlphaControls
+int GetHUE()
+{
+  return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETHUE,0,0);
+}
+//---------------------------------------------------------------------------
+int GetSaturation()
+{
+  return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETSATURATION,0,0);
 }
 //---------------------------------------------------------------------------
 
@@ -810,7 +843,7 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,1,3,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,1,4,0);
   PluginInfo.Description = L"Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
