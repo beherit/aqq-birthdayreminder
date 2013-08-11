@@ -1,3 +1,9 @@
+3.1.4.0
+-----
+* Obs³uga kolorystyki stylizacji okien (barwa i nasycenie).
+* Drobna poprawka w obs³udze nadawania przeŸroczystoœci obramowañ przez wtyczkê AlphaWindows.
+* Aktualizacja komponentów AlphaControls do nowszej wersji (8.44).
+
 3.1.3.0
 -----
 * Zmiany w wsparciu dla wtyczki AlphaWindows.
