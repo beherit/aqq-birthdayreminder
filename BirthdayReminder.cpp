@@ -38,11 +38,6 @@ int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved
 //STRUKTURY-GLOWNE-----------------------------------------------------------
 TPluginLink PluginLink;
 TPluginInfo PluginInfo;
-TPluginNewsData PluginNewsData;
-TPluginAction PluginAction;
-PPluginContact ContactsUpdateContact;
-PPluginContact ReplyListContact;
-PPluginWindowEvent WindowEvent;
 //STALE-IDENTYFIKUJACE-WTYCZKE-W-CENTRUM-POWIADOMIEN-------------------------
 #define NEWS_BIRTHDAYREMINDER L"News/BirthdayReminder"
 #define NEWS_BIRTHDAYREMINDER_SOURCE L"News/BirthdayReminder/Source"
@@ -186,14 +181,19 @@ UnicodeString GetContactNick(UnicodeString JID)
 
 void DestroyBirthdayReminderAddSource()
 {
+  TPluginAction PluginAction;
+  ZeroMemory(&PluginAction,sizeof(TPluginAction));
   PluginAction.cbSize = sizeof(TPluginAction);
   PluginAction.pszName = L"BirthdayReminderItemButton";
+  PluginAction.Handle = (int)hFrmSourceAdd;
   PluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)&PluginAction);
 }
 //---------------------------------------------------------------------------
 
 void BuildBirthdayReminderAddSource()
 {
+  TPluginAction PluginAction;
+  ZeroMemory(&PluginAction,sizeof(TPluginAction));
   PluginAction.cbSize = sizeof(TPluginAction);
   PluginAction.pszName = L"BirthdayReminderItemButton";
   PluginAction.pszCaption = L"Birthday Reminder";
@@ -210,6 +210,7 @@ void BuildBirthdayReminderAddSource()
 //Usuwanie elementu z listy zrodel powiadomien
 void DestroyNewsDataItem()
 {
+  TPluginNewsData PluginNewsData;
   PluginNewsData.Kind = NEWS_BIRTHDAYREMINDER;
   PluginNewsData.Title = L"";
   PluginNewsData.ID = NEWS_BIRTHDAYREMINDER_SOURCE;
@@ -222,6 +223,7 @@ void DestroyNewsDataItem()
 //Tworzenie elementu na liscie zrodel powiadomien
 void BuildNewsDataItem()
 {
+  TPluginNewsData PluginNewsData;
   PluginNewsData.Kind = NEWS_BIRTHDAYREMINDER;
   PluginNewsData.Title = L"Birthday Reminder";
   PluginNewsData.ID = NEWS_BIRTHDAYREMINDER_SOURCE;
@@ -245,16 +247,16 @@ int __stdcall OnBeforeUnload(WPARAM wParam, LPARAM lParam)
 int __stdcall OnContactsUpdate(WPARAM wParam, LPARAM lParam)
 {
   //Pobieranie danych tyczacych kontatku
-  ContactsUpdateContact = (PPluginContact)wParam;
+  TPluginContact ContactsUpdateContact = *(PPluginContact)wParam;
   //Kontakt nie jest czatem
-  if(!ContactsUpdateContact->IsChat)
+  if(!ContactsUpdateContact.IsChat)
   {
     //Pobieranie identyfikatora kontatku
-	UnicodeString JID = (wchar_t*)ContactsUpdateContact->JID;
+	UnicodeString JID = (wchar_t*)ContactsUpdateContact.JID;
 	//Dowanie JID do listy kontakow
 	if(ContactList->IndexOf(JID)==-1) ContactList->Add(JID);
 	//Pobieranie i zapisywanie nicku kontatku
-	ContactsNickList->WriteString("Nick",JID,(wchar_t*)ContactsUpdateContact->Nick);
+	ContactsNickList->WriteString("Nick",JID,(wchar_t*)ContactsUpdateContact.Nick);
   }
 
   return 0;
@@ -579,16 +581,16 @@ int __stdcall OnReplyList(WPARAM wParam, LPARAM lParam)
   if(wParam==ReplyListID)
   {
     //Pobieranie danych tyczacych kontatku
-	ReplyListContact = (PPluginContact)lParam;
+	TPluginContact ReplyListContact = *(PPluginContact)lParam;
 	//Kontakt nie jest czatem
-	if(!ReplyListContact->IsChat)
+	if(!ReplyListContact.IsChat)
 	{
 	  //Pobieranie identyfikatora kontatku
-	  UnicodeString JID = (wchar_t*)ReplyListContact->JID;
+	  UnicodeString JID = (wchar_t*)ReplyListContact.JID;
 	  //Dowanie JID do listy kontakow
 	  if(ContactList->IndexOf(JID)==-1) ContactList->Add(JID);
 	  //Pobieranie i zapisywanie nicku kontatku
-	  ContactsNickList->WriteString("Nick",JID,(wchar_t*)ReplyListContact->Nick);
+	  ContactsNickList->WriteString("Nick",JID,(wchar_t*)ReplyListContact.Nick);
 	}
   }
   
@@ -600,14 +602,14 @@ int __stdcall OnReplyList(WPARAM wParam, LPARAM lParam)
 int __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam)
 {
   //Pobranie informacji o oknie i eventcie
-  WindowEvent = (PPluginWindowEvent)lParam;
-  int Event = WindowEvent->WindowEvent;
-  UnicodeString ClassName = (wchar_t*)WindowEvent->ClassName;
+  TPluginWindowEvent WindowEvent = *(PPluginWindowEvent)lParam;
+  int Event = WindowEvent.WindowEvent;
+  UnicodeString ClassName = (wchar_t*)WindowEvent.ClassName;
   //Otwarcie okna z lista zrodel powiadomien
   if((ClassName=="TfrmSourceAdd")&&(Event==WINDOW_EVENT_CREATE))
   {
 	//Pobranie uchwytu do okna
-	hFrmSourceAdd = (HWND)WindowEvent->Handle;
+	hFrmSourceAdd = (HWND)(int)WindowEvent.Handle;
 	//Tworzenie elementu do dodawania zrodla wtyczki w interfejsie AQQ
 	BuildBirthdayReminderAddSource();
   }
@@ -843,12 +845,14 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,1,4,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,1,4,2);
   PluginInfo.Description = L"Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
   PluginInfo.Copyright = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.Homepage = L"http://beherit.pl";
+  PluginInfo.Flag = 0;
+  PluginInfo.ReplaceDefaultModule = 0;
 
   return &PluginInfo;
 }

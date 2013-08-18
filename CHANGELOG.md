@@ -1,3 +1,7 @@
+3.1.4.2
+-----
+* Drobne zmiany optymalizacyjne.
+
 3.1.4.0
 -----
 * Obs³uga kolorystyki stylizacji okien (barwa i nasycenie).

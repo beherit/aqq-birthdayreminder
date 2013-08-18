@@ -74,6 +74,7 @@
         <BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_Release>4</VerInfo_Release>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
@@ -81,13 +82,14 @@
         <IncludePath>$(BDSINCLUDE)\windows\vcl;$(IncludePath)</IncludePath>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileVersion=3.1.4.0;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.4.2;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_Release>4</VerInfo_Release>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileVersion=3.1.4.0;LegalCopyright=Krzysztof Grochocki (Beherit);ProductName=Birthday Reminder;ProductVersion=3.0.0.0</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.4.2;LegalCopyright=Krzysztof Grochocki (Beherit);ProductName=Birthday Reminder;ProductVersion=3.0.0.0</VerInfo_Keys>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
     </PropertyGroup>
@@ -112,40 +114,44 @@
         <ILINK_LibraryPath>$(BDSLIB)\$(PLATFORM)\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_Release>4</VerInfo_Release>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <Defines>_DEBUG;$(Defines)</Defines>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
-        <VerInfo_Keys>FileVersion=3.1.4.0;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.4.2;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
+        <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Release>4</VerInfo_Release>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <Defines>_DEBUG;$(Defines)</Defines>
-        <VerInfo_Keys>FileVersion=3.1.4.0;LegalCopyright=Krzysztof Grochocki (Beherit);ProductName=Birthday Reminder;ProductVersion=3.0.0.0</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.4.2;LegalCopyright=Krzysztof Grochocki (Beherit);ProductName=Birthday Reminder;ProductVersion=3.0.0.0</VerInfo_Keys>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_Release>4</VerInfo_Release>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <Defines>NDEBUG;$(Defines)</Defines>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib;vclimg.lib;vclx.lib;acntXE4_R.lib</LinkPackageStatics>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileVersion=3.1.4.0;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.4.2;ProductName=Birthday Reminder;ProductVersion=3.0.0.0;LegalCopyright=Krzysztof Grochocki (Beherit)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
+        <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Release>4</VerInfo_Release>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <Defines>NDEBUG;$(Defines)</Defines>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
-        <VerInfo_Keys>FileVersion=3.1.4.0;LegalCopyright=Krzysztof Grochocki (Beherit);ProductName=Birthday Reminder;ProductVersion=3.0.0.0</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=3.1.4.2;LegalCopyright=Krzysztof Grochocki (Beherit);ProductName=Birthday Reminder;ProductVersion=3.0.0.0</VerInfo_Keys>
         <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib;acntXE3_R.lib;vclimg.lib;vclx.lib</LinkPackageStatics>
     </PropertyGroup>
     <ItemGroup>
