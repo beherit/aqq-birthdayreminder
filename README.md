@@ -12,7 +12,7 @@ Autorem wtyczki Birthday Reminder jest Krzysztof Grochocki. Możesz skontaktowa�
 
 Licencja
 -------
-Wtyczka Birthday Reminder wykorzystuje licencję [GNU General Public License 3](http://www.gnu.org/copyleft/gpl.html).
+Wtyczka Birthday Reminder objęta jest licencją [GNU General Public License 3](http://www.gnu.org/copyleft/gpl.html).
 
     Birthday Reminder
     Copyright (C) 2009-2013  Krzysztof Grochocki
