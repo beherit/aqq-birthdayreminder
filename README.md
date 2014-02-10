@@ -15,7 +15,7 @@ Licencja
 Wtyczka Birthday Reminder objęta jest licencją [GNU General Public License 3](http://www.gnu.org/copyleft/gpl.html).
 
     Birthday Reminder
-    Copyright (C) 2009-2013  Krzysztof Grochocki
+    Copyright (C) 2009-2014  Krzysztof Grochocki
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

@@ -1,3 +1,10 @@
+3.2.0.0
+-----
+* Kosmetyczne zmiany wygl¹du powiadomieñ.
+* Kompilacja pod poprawionymi nag³ówkami dla wersji 64-bitowej.
+* Zmniejszenie rozmiaru wtyczki 64-bitowej poprzez u¿ycie kompresji LZMA.
+* Aktualizacja komponentów AlphaControls do nowszej wersji (8.53).
+
 3.1.4.2
 -----
 * Drobne zmiany optymalizacyjne.
