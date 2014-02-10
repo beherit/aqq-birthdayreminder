@@ -151,6 +151,9 @@ object SettingsForm: TSettingsForm
   Position = poDesktopCenter
   OnCreate = FormCreate
   OnShow = FormShow
+  DesignSize = (
+    323
+    116)
   PixelsPerInch = 96
   TextHeight = 13
   object Bevel: TsBevel
@@ -629,6 +632,7 @@ object SettingsForm: TSettingsForm
     Top = 86
     Width = 75
     Height = 25
+    Anchors = [akRight, akBottom]
     Caption = 'Anuluj'
     TabOrder = 3
     OnClick = aExitExecute
@@ -639,6 +643,7 @@ object SettingsForm: TSettingsForm
     Top = 86
     Width = 75
     Height = 25
+    Anchors = [akRight, akBottom]
     Caption = 'OK'
     TabOrder = 0
     OnClick = OKButtonClick
@@ -675,6 +680,7 @@ object SettingsForm: TSettingsForm
     BoundLabel.MaxWidth = 0
     BoundLabel.UseSkinColor = True
     SkinData.SkinSection = 'COMBOBOX'
+    VerticalAlignment = taAlignTop
     Style = csDropDownList
     ItemIndex = 0
     TabOrder = 2
@@ -732,6 +738,7 @@ object SettingsForm: TSettingsForm
     ThirdParty.ThirdScrollControl = ' '
     ThirdParty.ThirdUpDown = ' '
     ThirdParty.ThirdScrollBar = ' '
+    ThirdParty.ThirdStaticText = ' '
     Left = 32
     Top = 88
   end

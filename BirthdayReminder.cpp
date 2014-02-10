@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------
-// Copyright (C) 2009-2013 Krzysztof Grochocki
+// Copyright (C) 2009-2014 Krzysztof Grochocki
 //
 // This file is part of Birthday Reminder
 //
@@ -59,15 +59,15 @@ bool SourceActiveChk;
 bool InBirthDayChk;
 int AnotherDayChk;
 //FORWARD-AQQ-HOOKS----------------------------------------------------------
-int __stdcall OnBeforeUnload(WPARAM wParam, LPARAM lParam);
-int __stdcall OnContactsUpdate(WPARAM wParam, LPARAM lParam);
-int __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam);
-int __stdcall OnNewsActive(WPARAM wParam, LPARAM lParam);
-int __stdcall OnNewsDelete(WPARAM wParam, LPARAM lParam);
-int __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam);
-int __stdcall OnReplyList(WPARAM wParam, LPARAM lParam);
-int __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam);
-int __stdcall ServiceBirthdayReminderAddSource(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnBeforeUnload(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnContactsUpdate(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnNewsActive(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnNewsDelete(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnReplyList(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall ServiceBirthdayReminderAddSource(WPARAM wParam, LPARAM lParam);
 //FORWARD-OTHER-FUNCTION-----------------------------------------------------
 void LoadSettings();
 //---------------------------------------------------------------------------
@@ -169,9 +169,12 @@ int GetSaturation()
 //Pobieranie pseudonimu kontaktu podajac jego JID
 UnicodeString GetContactNick(UnicodeString JID)
 {
+  //Odczyt pseudonimu z pliku INI
   UnicodeString Nick = ContactsNickList->ReadString("Nick",JID,"");
+  //Pseudonim nie zostal pobrany
   if(Nick.IsEmpty())
   {
+	//Skracanie JID do ladniejszej formy
 	if(JID.Pos("@")) JID.Delete(JID.Pos("@"),JID.Length());
 	return JID;
   }
@@ -179,6 +182,7 @@ UnicodeString GetContactNick(UnicodeString JID)
 }
 //---------------------------------------------------------------------------
 
+//Usuwanie elementu do dodawania zrodla wtyczki
 void DestroyBirthdayReminderAddSource()
 {
   TPluginAction PluginAction;
@@ -190,6 +194,7 @@ void DestroyBirthdayReminderAddSource()
 }
 //---------------------------------------------------------------------------
 
+//Tworzenie elementu do dodawania zrodla wtyczki
 void BuildBirthdayReminderAddSource()
 {
   TPluginAction PluginAction;
@@ -234,7 +239,7 @@ void BuildNewsDataItem()
 //---------------------------------------------------------------------------
 
 //Hook na wylaczenie komunikatora poprzez usera
-int __stdcall OnBeforeUnload(WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnBeforeUnload(WPARAM wParam, LPARAM lParam)
 {
   //Info o rozpoczeciu procedury zamykania komunikatora
   ForceUnloadExecuted = true;
@@ -244,7 +249,7 @@ int __stdcall OnBeforeUnload(WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Hook na zmianê stanu kontaktu
-int __stdcall OnContactsUpdate(WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnContactsUpdate(WPARAM wParam, LPARAM lParam)
 {
   //Pobieranie danych tyczacych kontatku
   TPluginContact ContactsUpdateContact = *(PPluginContact)wParam;
@@ -264,7 +269,7 @@ int __stdcall OnContactsUpdate(WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Hook na zaladowanie wszystkich modulow
-int __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 {
   //Pobranie ID dla enumeracji kontaktów
   ReplyListID = GetTickCount();
@@ -278,7 +283,7 @@ int __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Hook na zmiane stanu aktywnosci zrodla przez usera
-int __stdcall OnNewsActive(WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnNewsActive(WPARAM wParam, LPARAM lParam)
 {
   //Zmienil sie stan naszego zrodla
   if((wchar_t*)wParam==(UnicodeString)NEWS_BIRTHDAYREMINDER_SOURCE)
@@ -298,7 +303,7 @@ int __stdcall OnNewsActive(WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Hook na usuniecie zrodla powiadomien
-int __stdcall OnNewsDelete(WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnNewsDelete(WPARAM wParam, LPARAM lParam)
 {
   //Usuniete zostalo nasze zrodlo
   if((wchar_t*)wParam==(UnicodeString)NEWS_BIRTHDAYREMINDER_SOURCE)
@@ -320,7 +325,7 @@ int __stdcall OnNewsDelete(WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Hook na pobranie danych przez wskazane zrodlo
-int __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 {
   //Wywolane zostalo nasze zrodlo
   if((wchar_t*)lParam==(UnicodeString)NEWS_BIRTHDAYREMINDER_SOURCE)
@@ -386,10 +391,11 @@ int __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 				//Data powiadomienia
 				PluginNewsItem.Date = TDateTime::CurrentDate();
 				//Tytul powiadomienia
-				UnicodeString Title = GetContactNick(ContactList->Strings[Count])+" ma dzisiaj urodziny";
+				UnicodeString Title = GetContactNick(ContactList->Strings[Count]).w_str();
 				PluginNewsItem.Title = Title.w_str();
 				//Zrodlo powiadomienia
-				PluginNewsItem.Source = L"";
+				UnicodeString Source = ContactList->Strings[Count];
+				PluginNewsItem.Source = Source.w_str();
 				//Dekodowanie sciezki awatara
 				TIniFile *Ini = new TIniFile(GetContactsUserDir()+ContactList->Strings[Count]+".ini");
 				UnicodeString Avatar = hModalSettingsForm->IdDecoderMIME->DecodeString(Ini->ReadString("Other","Avatar",""));
@@ -411,48 +417,18 @@ int __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 					UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi dziœ "+IntToStr(tYear-cYear)+" urodziny! Nie czekaj i <a href=\"xmpp:"+ContactList->Strings[Count]+"\">z³ó¿ ¿yczenia</a>!</div>";
 					PluginNewsItem.News = News.w_str();
 				  }
-				  //Domyslny awatar
-				  else
-				  {
-					//Pobranie sciezki do domyslnego awatara
-					Avatar = GetThemeDir()+"\\\\Graphics\\\\noavatar.png";
-					//Plik awatara istnieje
-					if(FileExists(Avatar))
-					{
-					  //Zmiana znakow w adresie awatara
-					  Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
-					  //Tresc powiadomienia
-					  UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi dziœ "+IntToStr(tYear-cYear)+" urodziny! Nie czekaj i <a href=\"xmpp:"+ContactList->Strings[Count]+"\">z³ó¿ ¿yczenia</a>!</div>";
-					  PluginNewsItem.News = News.w_str();
-					}
-					//Tresc powiadomienia bez awatara
-					else
-					{
-					  UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi dziœ "+IntToStr(tYear-cYear)+" urodziny! Nie czekaj i <a href=\"xmpp:"+ContactList->Strings[Count]+"\">z³ó¿ ¿yczenia</a>!</div>";
-					  PluginNewsItem.News = News.w_str();
-					}
-				  }
-				}
-				//Domyslny awatar
-				else
-				{
-				  //Pobranie sciezki do domyslnego awatara
-				  Avatar = GetThemeDir()+"\\\\Graphics\\\\noavatar.png";
-				  //Plik awatara istnieje
-				  if(FileExists(Avatar))
-				  {
-					//Zmiana znakow w adresie awatara
-					Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
-					//Tresc powiadomienia
-					UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi dziœ "+IntToStr(tYear-cYear)+" urodziny! Nie czekaj i <a href=\"xmpp:"+ContactList->Strings[Count]+"\">z³ó¿ ¿yczenia</a>!</div>";
-					PluginNewsItem.News = News.w_str();
-				  }
 				  //Tresc powiadomienia bez awatara
 				  else
 				  {
 					UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi dziœ "+IntToStr(tYear-cYear)+" urodziny! Nie czekaj i <a href=\"xmpp:"+ContactList->Strings[Count]+"\">z³ó¿ ¿yczenia</a>!</div>";
 					PluginNewsItem.News = News.w_str();
 				  }
+				}
+				//Tresc powiadomienia bez awatara
+				else
+				{
+				  UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi dziœ "+IntToStr(tYear-cYear)+" urodziny! Nie czekaj i <a href=\"xmpp:"+ContactList->Strings[Count]+"\">z³ó¿ ¿yczenia</a>!</div>";
+				  PluginNewsItem.News = News.w_str();
 				}
 				//Wewnetrzne ID powiadomienia
 				PluginNewsItem.ParentIndex = wParam;
@@ -478,15 +454,19 @@ int __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 				else if(AnotherDayChk==6) Text = "za szeœæ dni";
 				else if(AnotherDayChk==7) Text = "za tydzieñ";
 				else if(AnotherDayChk==8) Text = "za dwa tygodnie";
+				//Ustalanie dnia urodzin
+				TDateTime DiffBirthDay = EncodeDate(tYear,StrToInt(ContactMonth),StrToInt(ContactDay));
+				UnicodeString BirthDayName = DiffBirthDay.FormatString("dddd");
 				//Wypelnienie struktury
 				TPluginNewsItem PluginNewsItem;
 				//Data powiadomienia
 				PluginNewsItem.Date = TDateTime::CurrentDate();
 				//Tytul powiadomienia
-				UnicodeString Title = GetContactNick(ContactList->Strings[Count])+" ma "+Text+" urodziny";
+				UnicodeString Title = GetContactNick(ContactList->Strings[Count]).w_str();
 				PluginNewsItem.Title = Title.w_str();
 				//Zrodlo powiadomienia
-				PluginNewsItem.Source = L"";
+				UnicodeString Source = ContactList->Strings[Count];
+				PluginNewsItem.Source = Source.w_str();
 				//Dekodowanie sciezki awatara
 				TIniFile *Ini = new TIniFile(GetContactsUserDir()+ContactList->Strings[Count]+".ini");
 				UnicodeString Avatar = hModalSettingsForm->IdDecoderMIME->DecodeString(Ini->ReadString("Other","Avatar",""));
@@ -505,51 +485,21 @@ int __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 					//Zmiana znakow w adresie awatara
 					Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
 					//Tresc powiadomienia
-					UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" "+IntToStr(tYear-cYear)+" urodziny!</div>";
-					PluginNewsItem.News = News.w_str();
-				  }
-				  //Domyslny awatar
-				  else
-				  {
-					//Pobranie sciezki do domyslnego awatara
-					Avatar = GetThemeDir()+"\\\\Graphics\\\\noavatar.png";
-					//Plik awatara istnieje
-					if(FileExists(Avatar))
-					{
-					  //Zmiana znakow w adresie awatara
-					  Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
-					  //Tresc powiadomienia
-					  UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" "+IntToStr(tYear-cYear)+" urodziny!</div>";
-					  PluginNewsItem.News = News.w_str();
-					}
-					//Tresc powiadomienia bez awatara
-					else
-					{
-					  UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" "+IntToStr(tYear-cYear)+" urodziny!</div>";
-					  PluginNewsItem.News = News.w_str();
-					}
-				  }
-				}
-				//Domyslny awatar
-				else
-				{
-				  //Pobranie sciezki do domyslnego awatara
-				  Avatar = GetThemeDir()+"\\\\Graphics\\\\noavatar.png";
-				  //Plik awatara istnieje
-				  if(FileExists(Avatar))
-				  {
-					//Zmiana znakow w adresie awatara
-					Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
-					//Tresc powiadomienia
-					UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" "+IntToStr(tYear-cYear)+" urodziny!</div>";
+					UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" ("+BirthDayName+", "+ContactDay+"."+ContactMonth+") "+IntToStr(tYear-cYear)+" urodziny!</div>";
 					PluginNewsItem.News = News.w_str();
 				  }
 				  //Tresc powiadomienia bez awatara
 				  else
 				  {
-					UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" "+IntToStr(tYear-cYear)+" urodziny!</div>";
+					UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" ("+BirthDayName+", "+ContactDay+"."+ContactMonth+") "+IntToStr(tYear-cYear)+" urodziny!</div>";
 					PluginNewsItem.News = News.w_str();
 				  }
+				}
+				//Tresc powiadomienia bez awatara
+				else
+				{
+				  UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" ("+BirthDayName+", "+ContactDay+"."+ContactMonth+") "+IntToStr(tYear-cYear)+" urodziny!</div>";
+				  PluginNewsItem.News = News.w_str();
 				}
 				//Wewnetrzne ID powiadomienia
 				PluginNewsItem.ParentIndex = wParam;
@@ -575,7 +525,7 @@ int __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Hook na enumeracje listy kontatkow
-int __stdcall OnReplyList(WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnReplyList(WPARAM wParam, LPARAM lParam)
 {
   //Sprawdzanie ID wywolania enumeracji
   if(wParam==ReplyListID)
@@ -599,7 +549,7 @@ int __stdcall OnReplyList(WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Hook na zamkniecie/otwarcie okien
-int __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam)
 {
   //Pobranie informacji o oknie i eventcie
   TPluginWindowEvent WindowEvent = *(PPluginWindowEvent)lParam;
@@ -626,7 +576,7 @@ int __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam)
 }
 //---------------------------------------------------------------------------
 
-int __stdcall ServiceBirthdayReminderAddSource(WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall ServiceBirthdayReminderAddSource(WPARAM wParam, LPARAM lParam)
 {
   //Element na liscie zrdodel powiadomien nie zostal jeszcze dodany
   if(!SourceAddedChk)
@@ -751,7 +701,7 @@ void LoadSettings()
 //---------------------------------------------------------------------------
 
 //Zaladowanie wtyczki
-extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
+extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 {
   //Linkowanie wtyczki z komunikatorem
   PluginLink = *Link;
@@ -812,7 +762,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 //---------------------------------------------------------------------------
 
 //Wyladowanie wtyczki
-extern "C" int __declspec(dllexport) __stdcall Unload()
+extern "C" INT_PTR __declspec(dllexport) __stdcall Unload()
 {
   //Wyladowanie wszystkich hookow
   PluginLink.UnhookEvent(OnBeforeUnload);
@@ -845,7 +795,7 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,1,4,2);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,2,0,0);
   PluginInfo.Description = L"Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
