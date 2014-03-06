@@ -742,11 +742,6 @@ object SettingsForm: TSettingsForm
     Left = 32
     Top = 88
   end
-  object IdDecoderMIME: TIdDecoderMIME
-    FillChar = '='
-    Left = 96
-    Top = 88
-  end
   object sSkinProvider: TsSkinProvider
     AddedTitle.Font.Charset = DEFAULT_CHARSET
     AddedTitle.Font.Color = clNone

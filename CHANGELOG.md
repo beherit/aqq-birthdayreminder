@@ -1,3 +1,7 @@
+3.2.1.0
+-----
+* Dekodowanie Base64 za pomoc¹ SDK.
+
 3.2.0.0
 -----
 * Kosmetyczne zmiany wygl¹du powiadomieñ.

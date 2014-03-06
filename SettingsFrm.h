@@ -30,17 +30,13 @@
 #include "sCheckBox.hpp"
 #include "sComboBox.hpp"
 #include "sSkinManager.hpp"
-#include <IdBaseComponent.hpp>
-#include <IdCoder.hpp>
-#include <IdCoder3to4.hpp>
-#include <IdCoderMIME.hpp>
+#include "sSkinProvider.hpp"
 #include <System.Actions.hpp>
 #include <System.Classes.hpp>
 #include <Vcl.ActnList.hpp>
 #include <Vcl.Controls.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.StdCtrls.hpp>
-#include "sSkinProvider.hpp"
 //---------------------------------------------------------------------------
 class TSettingsForm : public TForm
 {
@@ -54,7 +50,6 @@ __published:	// IDE-managed Components
 	TActionList *ActionList;
 	TAction *aExit;
 	TsSkinManager *sSkinManager;
-	TIdDecoderMIME *IdDecoderMIME;
 	TsSkinProvider *sSkinProvider;
 	void __fastcall aExitExecute(TObject *Sender);
 	void __fastcall OKButtonClick(TObject *Sender);
