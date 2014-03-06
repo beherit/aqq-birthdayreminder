@@ -166,6 +166,13 @@ int GetSaturation()
 }
 //---------------------------------------------------------------------------
 
+//Dekodowanie ciagu znakow z Base64
+UnicodeString DecodeBase64(UnicodeString Str)
+{
+  return (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_BASE64,(WPARAM)Str.w_str(),2);
+}
+//---------------------------------------------------------------------------
+
 //Pobieranie pseudonimu kontaktu podajac jego JID
 UnicodeString GetContactNick(UnicodeString JID)
 {
@@ -338,15 +345,12 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 	Word tYear=0,tMonth=0,tDay=0;
 	TDateTime Todey = TDateTime::CurrentDate();
 	DecodeDate(Todey, tYear, tMonth, tDay);
-	//Przypisanie uchwytu do formy
-	Application->Handle = (HWND)SettingsForm;
-	TSettingsForm *hModalSettingsForm = new TSettingsForm(Application);
 	//Sprawdzanie wszystkich kontatkow z listy
 	for(int Count=0;Count<ContactList->Count;Count++)
 	{
 	  //Odczyt daty urodzin kontatku
 	  TIniFile *Ini = new TIniFile(GetContactsUserDir()+ContactList->Strings[Count]+".ini");
-	  UnicodeString ContactBirthDay = hModalSettingsForm->IdDecoderMIME->DecodeString((Ini->ReadString("Buddy", "Birth", "A===").c_str()));
+	  UnicodeString ContactBirthDay = DecodeBase64(Ini->ReadString("Buddy", "Birth", "A==="));
 	  delete Ini;
 	  ContactBirthDay = ContactBirthDay.Trim();
 	  //Odkodowanie daty
@@ -398,7 +402,7 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 				PluginNewsItem.Source = Source.w_str();
 				//Dekodowanie sciezki awatara
 				TIniFile *Ini = new TIniFile(GetContactsUserDir()+ContactList->Strings[Count]+".ini");
-				UnicodeString Avatar = hModalSettingsForm->IdDecoderMIME->DecodeString(Ini->ReadString("Other","Avatar",""));
+				UnicodeString Avatar = DecodeBase64(Ini->ReadString("Other","Avatar",""));
 				delete Ini;
 				//Jezeli sciezka awatata zostala prawidlowo pobrana
 				if((!Avatar.IsEmpty())&&(Avatar.Length()>1))
@@ -469,7 +473,7 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 				PluginNewsItem.Source = Source.w_str();
 				//Dekodowanie sciezki awatara
 				TIniFile *Ini = new TIniFile(GetContactsUserDir()+ContactList->Strings[Count]+".ini");
-				UnicodeString Avatar = hModalSettingsForm->IdDecoderMIME->DecodeString(Ini->ReadString("Other","Avatar",""));
+				UnicodeString Avatar = DecodeBase64(Ini->ReadString("Other","Avatar",""));
 				delete Ini;
 				//Jezeli sciezka awatata zostala prawidlowo pobrana
 				if((!Avatar.IsEmpty())&&(Avatar.Length()>1))
@@ -512,10 +516,6 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 	  }
 	  catch (...) { /*blad - nie rob nic*/ }
 	}
-	//Anty "Abnormal program termination"
-	hModalSettingsForm->DestroyComponents();
-	//Usuniecie uchwytu do formy
-	delete hModalSettingsForm;
 	//Informacja o zakonczeniu pobierania danych
 	return PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_FETCHEND, wParam, 0);
   }
@@ -795,11 +795,11 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,2,0,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,2,1,0);
   PluginInfo.Description = L"Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy.";
-  PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.Author = L"Krzysztof Grochocki";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
-  PluginInfo.Copyright = L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.Copyright = L"Krzysztof Grochocki";
   PluginInfo.Homepage = L"http://beherit.pl";
   PluginInfo.Flag = 0;
   PluginInfo.ReplaceDefaultModule = 0;
