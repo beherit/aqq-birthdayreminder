@@ -127,3 +127,10 @@ void __fastcall TSettingsForm::OKButtonClick(TObject *Sender)
   Close();
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TSettingsForm::sSkinManagerSysDlgInit(TacSysDlgData DlgData, bool &AllowSkinning)
+{
+  AllowSkinning = false;
+}
+//---------------------------------------------------------------------------
+
