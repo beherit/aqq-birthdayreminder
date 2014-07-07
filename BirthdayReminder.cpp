@@ -304,7 +304,7 @@ INT_PTR __stdcall OnNewsActive(WPARAM wParam, LPARAM lParam)
 	//Odswiezenie wszystkich zrodel
 	if(SourceActiveChk) PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
   }
-  
+
   return 0;
 }
 //---------------------------------------------------------------------------
@@ -543,7 +543,7 @@ INT_PTR __stdcall OnReplyList(WPARAM wParam, LPARAM lParam)
 	  ContactsNickList->WriteString("Nick",JID,(wchar_t*)ReplyListContact.Nick);
 	}
   }
-  
+
   return 0;
 }
 //---------------------------------------------------------------------------
@@ -726,7 +726,7 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
    ExtractRes((PluginUserDir + "\\\\BirthdayReminder\\\\Gift.png").w_str(),L"GITF",L"DATA");
   //Przypisanie ikonki do interfejsu AQQ
   GITF = PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(PluginUserDir + "\\\\BirthdayReminder\\\\Gift.png").w_str());
-  //Odczyt ustawien  
+  //Odczyt ustawien
   LoadSettings();
   //Hook na wylaczenie komunikatora poprzez usera
   PluginLink.HookEvent(AQQ_SYSTEM_BEFOREUNLOAD,OnBeforeUnload);
@@ -795,7 +795,7 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"Birthday Reminder";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,2,1,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(3,2,2,0);
   PluginInfo.Description = L"Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy.";
   PluginInfo.Author = L"Krzysztof Grochocki";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";

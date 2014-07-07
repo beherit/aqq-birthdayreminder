@@ -1,3 +1,8 @@
+3.2.2.0
+-----
+* Nieskórkowanie systemowych okien dialogowych niepochodz¹cych z wtyczki.
+* Aktualizacja komponentów AlphaControls do nowszej wersji (9.10).
+
 3.2.1.0
 -----
 * Dekodowanie Base64 za pomoc¹ SDK.
