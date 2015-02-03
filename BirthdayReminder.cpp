@@ -164,6 +164,11 @@ int GetSaturation()
 	return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETSATURATION,0,0);
 }
 //---------------------------------------------------------------------------
+int GetBrightness()
+{
+	return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETBRIGHTNESS,0,0);
+}
+//---------------------------------------------------------------------------
 
 //Dekodowanie ciagu znakow z Base64
 UnicodeString DecodeBase64(UnicodeString Str)
