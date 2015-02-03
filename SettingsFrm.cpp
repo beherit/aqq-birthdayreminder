@@ -53,84 +53,84 @@ __fastcall TSettingsForm::TSettingsForm(TComponent* Owner)
 
 void __fastcall TSettingsForm::WMTransparency(TMessage &Message)
 {
-  Application->ProcessMessages();
-  if(sSkinManager->Active) sSkinProvider->BorderForm->UpdateExBordersPos(true,(int)Message.LParam);
+	Application->ProcessMessages();
+	if(sSkinManager->Active) sSkinProvider->BorderForm->UpdateExBordersPos(true,(int)Message.LParam);
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TSettingsForm::FormCreate(TObject *Sender)
 {
-  //Wlaczona zaawansowana stylizacja okien
-  if(ChkSkinEnabled())
-  {
-	UnicodeString ThemeSkinDir = GetThemeSkinDir();
-	//Plik zaawansowanej stylizacji okien istnieje
-	if(FileExists(ThemeSkinDir + "\\\\Skin.asz"))
+	//Wlaczona zaawansowana stylizacja okien
+	if(ChkSkinEnabled())
 	{
-	  //Dane pliku zaawansowanej stylizacji okien
-	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
-	  sSkinManager->SkinDirectory = ThemeSkinDir;
-	  sSkinManager->SkinName = "Skin.asz";
-	  //Ustawianie animacji AlphaControls
-	  if(ChkThemeAnimateWindows()) sSkinManager->AnimEffects->FormShow->Time = 200;
-	  else sSkinManager->AnimEffects->FormShow->Time = 0;
-	  sSkinManager->Effects->AllowGlowing = ChkThemeGlowing();
-	  //Zmiana kolorystyki AlphaControls
-	  sSkinManager->HueOffset = GetHUE();
-	  sSkinManager->Saturation = GetSaturation();
-	  //Aktywacja skorkowania AlphaControls
-	  sSkinManager->Active = true;
+		UnicodeString ThemeSkinDir = GetThemeSkinDir();
+		//Plik zaawansowanej stylizacji okien istnieje
+		if(FileExists(ThemeSkinDir + "\\\\Skin.asz"))
+		{
+			//Dane pliku zaawansowanej stylizacji okien
+			ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
+			sSkinManager->SkinDirectory = ThemeSkinDir;
+			sSkinManager->SkinName = "Skin.asz";
+			//Ustawianie animacji AlphaControls
+			if(ChkThemeAnimateWindows()) sSkinManager->AnimEffects->FormShow->Time = 200;
+			else sSkinManager->AnimEffects->FormShow->Time = 0;
+			sSkinManager->Effects->AllowGlowing = ChkThemeGlowing();
+			//Zmiana kolorystyki AlphaControls
+			sSkinManager->HueOffset = GetHUE();
+			sSkinManager->Saturation = GetSaturation();
+			//Aktywacja skorkowania AlphaControls
+			sSkinManager->Active = true;
+		}
+		//Brak pliku zaawansowanej stylizacji okien
+		else sSkinManager->Active = false;
 	}
-	//Brak pliku zaawansowanej stylizacji okien
+	//Zaawansowana stylizacja okien wylaczona
 	else sSkinManager->Active = false;
-  }
-  //Zaawansowana stylizacja okien wylaczona
-  else sSkinManager->Active = false;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TSettingsForm::FormShow(TObject *Sender)
 {
-  //Odczyt ustawien
-  TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
-  //Powiadomienie w dniu urodzin
-  InBirthDayCheckBox->Checked = Ini->ReadBool("Settings","InBirthDay",true);
-  //Informowanie rowniez w innym okresie
-  AnotherDayComboBox->ItemIndex = Ini->ReadInteger("Settings","Another",0);
-  delete Ini;
+	//Odczyt ustawien
+	TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
+	//Powiadomienie w dniu urodzin
+	InBirthDayCheckBox->Checked = Ini->ReadBool("Settings","InBirthDay",true);
+	//Informowanie rowniez w innym okresie
+	AnotherDayComboBox->ItemIndex = Ini->ReadInteger("Settings","Another",0);
+	delete Ini;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TSettingsForm::aExitExecute(TObject *Sender)
 {
-  //Odzaczenie typu zamkniecia formy
-  AddSource = false;
-  //Zamkniecie formy
-  Close();
+	//Odzaczenie typu zamkniecia formy
+	AddSource = false;
+	//Zamkniecie formy
+	Close();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TSettingsForm::OKButtonClick(TObject *Sender)
 {
-  //Zapisanie nowych ustawien
-  TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
-  //Powiadomienie w dniu urodzin
-  Ini->WriteBool("Settings","InBirthDay",InBirthDayCheckBox->Checked);
-  //Informowanie rowniez w innym okresie
-  Ini->WriteInteger("Settings","Another",AnotherDayComboBox->ItemIndex);
-  delete Ini;
-  //Odczyt ustawien w rdzeniu wtyczki
-  LoadSettings();
-  //Odzaczenie typu zamkniecia formy
-  AddSource = true;
-  //Zamkniecie formy
-  Close();
+	//Zapisanie nowych ustawien
+	TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
+	//Powiadomienie w dniu urodzin
+	Ini->WriteBool("Settings","InBirthDay",InBirthDayCheckBox->Checked);
+	//Informowanie rowniez w innym okresie
+	Ini->WriteInteger("Settings","Another",AnotherDayComboBox->ItemIndex);
+	delete Ini;
+	//Odczyt ustawien w rdzeniu wtyczki
+	LoadSettings();
+	//Odzaczenie typu zamkniecia formy
+	AddSource = true;
+	//Zamkniecie formy
+	Close();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TSettingsForm::sSkinManagerSysDlgInit(TacSysDlgData DlgData, bool &AllowSkinning)
 {
-  AllowSkinning = false;
+	AllowSkinning = false;
 }
 //---------------------------------------------------------------------------
 
