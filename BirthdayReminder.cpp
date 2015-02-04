@@ -607,62 +607,30 @@ INT_PTR __stdcall OnWindowEvent(WPARAM wParam, LPARAM lParam)
 
 INT_PTR __stdcall ServiceBirthdayReminderAddSource(WPARAM wParam, LPARAM lParam)
 {
-	//Element na liscie zrdodel powiadomien nie zostal jeszcze dodany
-	if(!SourceAddedChk)
+	//Przypisanie uchwytu do formy
+	Application->Handle = (HWND)SettingsForm;
+	TSettingsForm *hModalSettingsForm = new TSettingsForm(Application);
+	//Pokaznie okna
+	hModalSettingsForm->ShowModal();
+	//Zostal wcisniety przycisk OK
+	if(hModalSettingsForm->AddSource)
 	{
-		//Przypisanie uchwytu do formy
-		Application->Handle = (HWND)SettingsForm;
-		TSettingsForm *hModalSettingsForm = new TSettingsForm(Application);
-		//Pokaznie okna
-		hModalSettingsForm->ShowModal();
-		//Zostal wcisniety przycisk OK
-		if(hModalSettingsForm->AddSource)
-		{
-			//Zapisywanie informacji o dodaniu zrodla
-			TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
-			Ini->WriteBool("Settings","SourceAdded",true);
-			Ini->WriteBool("Settings","SourceActive",true);
-			delete Ini;
-			//Odzaczenie dodania zrodla
-			SourceAddedChk = true;
-			SourceActiveChk = true;
-			//Tworzenie elementu na liscie zrodel powiadomien
-			DestroyNewsDataItem();
-			BuildNewsDataItem();
-			//Odswiezenie wszystkich zrodel
-			PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
-		}
-		//Usuniecie uchwytu do formy
-		delete hModalSettingsForm;
+		//Zapisywanie informacji o dodaniu zrodla
+		TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
+		Ini->WriteBool("Settings","SourceAdded",true);
+		Ini->WriteBool("Settings","SourceActive",true);
+		delete Ini;
+		//Odzaczenie dodania zrodla
+		SourceAddedChk = true;
+		SourceActiveChk = true;
+		//Tworzenie elementu na liscie zrodel powiadomien
+		DestroyNewsDataItem();
+		BuildNewsDataItem();
+		//Odswiezenie wszystkich zrodel
+		PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
 	}
-	//Element na liscie zrodel powiadomien zostal juz dodany
-	else
-	{
-		//Przypisanie uchwytu do formy
-		Application->Handle = (HWND)SettingsForm;
-		TSettingsForm *hModalSettingsForm = new TSettingsForm(Application);
-		//Pokaznie okna
-		hModalSettingsForm->ShowModal();
-		//Zostal wcisniety przycisk OK
-		if(hModalSettingsForm->AddSource)
-		{
-			//Zapisywanie informacji o dodaniu zrodla
-			TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
-			Ini->WriteBool("Settings","SourceAdded",true);
-			Ini->WriteBool("Settings","SourceActive",true);
-			delete Ini;
-			//Odzaczenie dodania zrodla
-			SourceAddedChk = true;
-			SourceActiveChk = true;
-			//Ponowne tworzenie elementu na liscie zrodel powiadomien
-			DestroyNewsDataItem();
-			BuildNewsDataItem();
-			//Odswiezenie wszystkich zrodel
-			PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
-		}
-		//Usuniecie uchwytu do formy
-		delete hModalSettingsForm;
-	}
+	//Usuniecie uchwytu do formy
+	delete hModalSettingsForm;
 
 	return 0;
 }
