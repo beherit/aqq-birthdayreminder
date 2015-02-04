@@ -1,5 +1,5 @@
 # Birthday Reminder
-Birthday Reminder jest wtyczką do komunikatora [AQQ](http://www.aqq.eu/pl.php). Powiadamia, poprzez centrum powiadomień, o obchodzeniu urodzin kontaktów z naszej listy. Do poprawnego działania wtyczki niezbędne jest, aby data urodzin była zapisana w wizytówce w postaci RRRR-MM-DD.
+Birthday Reminder jest wtyczką do komunikatora [AQQ](http://www.aqq.eu/pl.php). Powiadamia, poprzez centrum powiadomień, o urodzinach kontaktów z naszej listy. Do poprawnego działania wtyczki niezbędne jest, aby data urodzin była zapisana w wizytówce w postaci RRRR-MM-DD.
 
 ### Wymagania
 Do skompilowania wtyczki AQQ Restarter potrzebne jest:
