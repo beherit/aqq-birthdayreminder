@@ -299,9 +299,6 @@ INT_PTR __stdcall OnLangCodeChanged(WPARAM wParam, LPARAM lParam)
 		LangCode = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETDEFLANGCODE,0,0);
 		LangPath = PluginUserDir + "\\\\Languages\\\\BirthdayReminder\\\\" + LangCode + "\\\\";
 	}
-	//Aktualizacja lokalizacji form wtyczki
-	for(int i=0;i<Screen->FormCount;i++)
-		LangForm(Screen->Forms[i]);
 	//Odswiezenie wszystkich zrodel
 	PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
 
