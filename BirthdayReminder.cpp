@@ -241,13 +241,16 @@ void DestroyNewsDataItem()
 //Tworzenie elementu na liscie zrodel powiadomien
 void BuildNewsDataItem()
 {
-	TPluginNewsData PluginNewsData;
-	PluginNewsData.Kind = NEWS_BIRTHDAYREMINDER;
-	PluginNewsData.Title = L"Birthday Reminder";
-	PluginNewsData.ID = NEWS_BIRTHDAYREMINDER_SOURCE;
-	PluginNewsData.Active = SourceActiveChk;
-	PluginNewsData.ImageIndex = GITF;
-	PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_ADD, (WPARAM)&PluginNewsData, 0);
+	if(SourceAddedChk)
+	{
+		TPluginNewsData PluginNewsData;
+		PluginNewsData.Kind = NEWS_BIRTHDAYREMINDER;
+		PluginNewsData.Title = L"Birthday Reminder";
+		PluginNewsData.ID = NEWS_BIRTHDAYREMINDER_SOURCE;
+		PluginNewsData.Active = SourceActiveChk;
+		PluginNewsData.ImageIndex = GITF;
+		PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_ADD, (WPARAM)&PluginNewsData, 0);
+	}
 }
 //---------------------------------------------------------------------------
 
@@ -313,8 +316,8 @@ INT_PTR __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 	ReplyListID = GetTickCount();
 	//Wywolanie enumeracji kontaktow
 	PluginLink.CallService(AQQ_CONTACTS_REQUESTLIST,(WPARAM)ReplyListID,0);
-	//Sprawdzenie czy wtyczka zostala dodana do zrodel powiadomien
-	if(SourceAddedChk) BuildNewsDataItem();
+	//Tworzenie elementu na liscie zrodel powiadomien
+	BuildNewsDataItem();
 
 	return 0;
 }
@@ -789,8 +792,8 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 		ReplyListID = GetTickCount();
 		//Wywolanie enumeracji kontaktow
 		PluginLink.CallService(AQQ_CONTACTS_REQUESTLIST,(WPARAM)ReplyListID,0);
-		//Sprawdzenie czy wtyczka zostala dodana do zrodel powiadomien
-		if(SourceAddedChk) BuildNewsDataItem();
+		//Tworzenie elementu na liscie zrodel powiadomien
+		BuildNewsDataItem();
 		//Odswiezenie wszystkich zrodel
 		PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
 	}
