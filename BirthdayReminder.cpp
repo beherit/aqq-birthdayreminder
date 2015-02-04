@@ -437,29 +437,25 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 								TIniFile *Ini = new TIniFile(GetContactsUserDir()+ContactList->Strings[Count]+".ini");
 								UnicodeString Avatar = DecodeBase64(Ini->ReadString("Other","Avatar",""));
 								delete Ini;
-								//Jezeli sciezka awatata zostala prawidlowo pobrana
-								if((!Avatar.IsEmpty())&&(Avatar.Length()>1))
+								//Usuwanie spacji
+								Avatar = Avatar.Trim();
+								//Jezeli sciezka awatara zostala prawidlowo pobrana
+								if(!Avatar.IsEmpty())
 								{
 									//Zamienianie sciezki relatywnej na absolutna
 									if(Avatar.Pos("{PROFILEPATH}"))
 										Avatar = StringReplace(Avatar, "{PROFILEPATH}", GetUserDir(), TReplaceFlags());
 									else
 										Avatar = StringReplace(Avatar, "{APPPATH}", GetApplicationPath(), TReplaceFlags());
-									//Plik awatara istnieje
-									if(FileExists(Avatar))
-									{
-										//Zmiana znakow w adresie awatara
-										Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
-										//Tresc powiadomienia
-										UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+Text+"</div>";
-										PluginNewsItem.News = News.w_str();
-									}
-									//Tresc powiadomienia bez awatara
-									else
-									{
-										UnicodeString News = "<div class=\"fb_content\">"+Text+"</div>";
-										PluginNewsItem.News = News.w_str();
-									}
+								}
+								//Plik awatara istnieje
+								if(FileExists(Avatar))
+								{
+									//Zmiana znakow w adresie awatara
+									Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
+									//Tresc powiadomienia
+									UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+Text+"</div>";
+									PluginNewsItem.News = News.w_str();
 								}
 								//Tresc powiadomienia bez awatara
 								else
@@ -504,29 +500,25 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 								TIniFile *Ini = new TIniFile(GetContactsUserDir()+ContactList->Strings[Count]+".ini");
 								UnicodeString Avatar = DecodeBase64(Ini->ReadString("Other","Avatar",""));
 								delete Ini;
-								//Jezeli sciezka awatata zostala prawidlowo pobrana
-								if((!Avatar.IsEmpty())&&(Avatar.Length()>1))
+								//Usuwanie spacji
+								Avatar = Avatar.Trim();
+								//Jezeli sciezka awatara zostala prawidlowo pobrana
+								if(!Avatar.IsEmpty())
 								{
 									//Zamienianie sciezki relatywnej na absolutna
 									if(Avatar.Pos("{PROFILEPATH}"))
 										Avatar = StringReplace(Avatar, "{PROFILEPATH}", GetUserDir(), TReplaceFlags());
 									else
 										Avatar = StringReplace(Avatar, "{APPPATH}", GetApplicationPath(), TReplaceFlags());
-									//Plik awatara istnieje
-									if(FileExists(Avatar))
-									{
-										//Zmiana znakow w adresie awatara
-										Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
-										//Tresc powiadomienia
-										UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+Text+"</div>";
-										PluginNewsItem.News = News.w_str();
-									}
-									//Tresc powiadomienia bez awatara
-									else
-									{
-										UnicodeString News = "<div class=\"fb_content\">"+Text+"</div>";
-										PluginNewsItem.News = News.w_str();
-									}
+								}
+								//Plik awatara istnieje
+								if(FileExists(Avatar))
+								{
+									//Zmiana znakow w adresie awatara
+									Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
+									//Tresc powiadomienia
+									UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+Text+"</div>";
+									PluginNewsItem.News = News.w_str();
 								}
 								//Tresc powiadomienia bez awatara
 								else
