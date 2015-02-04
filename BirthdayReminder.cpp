@@ -912,7 +912,7 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 	PluginInfo.cbSize = sizeof(TPluginInfo);
 	PluginInfo.ShortName = L"Birthday Reminder";
 	PluginInfo.Version = PLUGIN_MAKE_VERSION(3,3,0,0);
-	PluginInfo.Description = L"Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy.";
+	PluginInfo.Description = L"Powiadamia, poprzez centrum powiadomieñ, o urodzinach kontaktów z naszej listy.";
 	PluginInfo.Author = L"Krzysztof Grochocki";
 	PluginInfo.AuthorMail = L"kontakt@beherit.pl";
 	PluginInfo.Copyright = L"Krzysztof Grochocki";
