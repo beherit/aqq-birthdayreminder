@@ -37,6 +37,7 @@
 #include <Vcl.Controls.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.StdCtrls.hpp>
+#include "sLabel.hpp"
 //---------------------------------------------------------------------------
 class TSettingsForm : public TForm
 {
@@ -51,6 +52,7 @@ __published:	// IDE-managed Components
 	TAction *aExit;
 	TsSkinManager *sSkinManager;
 	TsSkinProvider *sSkinProvider;
+	TsLabel *AnotherDayLabel;
 	void __fastcall aExitExecute(TObject *Sender);
 	void __fastcall OKButtonClick(TObject *Sender);
 	void __fastcall FormCreate(TObject *Sender);

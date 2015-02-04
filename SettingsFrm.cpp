@@ -21,6 +21,7 @@
 
 //---------------------------------------------------------------------------
 #include <vcl.h>
+#include <LangAPI.hpp>
 #pragma hdrstop
 #include "SettingsFrm.h"
 //---------------------------------------------------------------------------
@@ -32,6 +33,7 @@
 #pragma link "sComboBox"
 #pragma link "sSkinManager"
 #pragma link "sSkinProvider"
+#pragma link "sLabel"
 #pragma resource "*.dfm"
 TSettingsForm *SettingsForm;
 //---------------------------------------------------------------------------
@@ -61,6 +63,8 @@ void __fastcall TSettingsForm::WMTransparency(TMessage &Message)
 
 void __fastcall TSettingsForm::FormCreate(TObject *Sender)
 {
+	//Lokalizowanie formy
+	LangForm(this);
 	//Wlaczona zaawansowana stylizacja okien
 	if(ChkSkinEnabled())
 	{
@@ -135,4 +139,3 @@ void __fastcall TSettingsForm::sSkinManagerSysDlgInit(TacSysDlgData DlgData, boo
 	AllowSkinning = false;
 }
 //---------------------------------------------------------------------------
-

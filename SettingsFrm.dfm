@@ -627,29 +627,41 @@ object SettingsForm: TSettingsForm
       000000000000}
     Transparent = True
   end
+  object AnotherDayLabel: TsLabel
+    Tag = 2
+    Left = 80
+    Top = 45
+    Width = 100
+    Height = 13
+    Alignment = taRightJustify
+    Caption = 'Informuj r'#243'wnie'#380' na:'
+  end
   object CancelButton: TsButton
+    Tag = 4
     Left = 240
     Top = 86
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
     Caption = 'Anuluj'
-    TabOrder = 3
+    TabOrder = 2
     OnClick = aExitExecute
     SkinData.SkinSection = 'BUTTON'
   end
   object OKButton: TsButton
+    Tag = 5
     Left = 159
     Top = 86
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
     Caption = 'OK'
-    TabOrder = 0
+    TabOrder = 3
     OnClick = OKButtonClick
     SkinData.SkinSection = 'BUTTON'
   end
   object InBirthDayCheckBox: TsCheckBox
+    Tag = 1
     Left = 80
     Top = 16
     Width = 151
@@ -657,19 +669,18 @@ object SettingsForm: TSettingsForm
     Caption = 'Powiadamiaj w dniu urodzin'
     Checked = True
     State = cbChecked
-    TabOrder = 1
+    TabOrder = 0
     SkinData.SkinSection = 'CHECKBOX'
     ImgChecked = 0
     ImgUnchecked = 0
   end
   object AnotherDayComboBox: TsComboBox
+    Tag = 3
     Left = 186
     Top = 42
     Width = 128
     Height = 21
     Alignment = taLeftJustify
-    BoundLabel.Active = True
-    BoundLabel.Caption = 'Informuj r'#243'wnie'#380' na:'
     BoundLabel.Indent = 0
     BoundLabel.Font.Charset = DEFAULT_CHARSET
     BoundLabel.Font.Color = clWindowText
@@ -683,7 +694,7 @@ object SettingsForm: TSettingsForm
     VerticalAlignment = taAlignTop
     Style = csDropDownList
     ItemIndex = 0
-    TabOrder = 2
+    TabOrder = 1
     Text = 'Brak'
     Items.Strings = (
       'Brak'

@@ -1,2 +1,6 @@
 SHARED DATA "Data\\BirthdayReminder.dll.png"
 GITF DATA "Data\\Gift.png"
+EN_CONST DATA "Languages\\EN\\Const.lng"
+EN_SETTINGSFRM DATA "Languages\\EN\\TSettingsForm.lng"
+PL_CONST DATA "Languages\\PL\\Const.lng"
+PL_SETTINGSFRM DATA "Languages\\PL\\TSettingsForm.lng"

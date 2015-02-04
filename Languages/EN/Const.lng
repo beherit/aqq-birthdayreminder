@@ -1,0 +1,9 @@
+Birthday=CC_NICK celebrating CC_COUNT birthday today. Do not wait and <a href="xmpp:CC_JID">send wishes</a>.
+Days1=CC_NICK celebrates CC_COUNT birthday tomorrow (CC_DAY, CC_DATE).
+Days2=CC_NICK celebrates CC_COUNT birthday in dwo days (CC_DAY, CC_DATE).
+Days3=CC_NICK celebrates CC_COUNT birthday in three days (CC_DAY, CC_DATE).
+Days4=CC_NICK celebrates CC_COUNT birthday in four days (CC_DAY, CC_DATE).
+Days5=CC_NICK celebrates CC_COUNT birthda in five days (CC_DAY, CC_DATE)y.
+Days6=CC_NICK celebrates CC_COUNT birthday in six days (CC_DAY, CC_DATE).
+Days7=CC_NICK celebrates CC_COUNT birthday in next week (CC_DAY, CC_DATE).
+Days8=CC_NICK celebrates CC_COUNT birthday in two weeks (CC_DAY, CC_DATE).
