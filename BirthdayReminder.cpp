@@ -329,14 +329,12 @@ INT_PTR __stdcall OnNewsActive(WPARAM wParam, LPARAM lParam)
 	//Zmienil sie stan naszego zrodla
 	if((wchar_t*)wParam==(UnicodeString)NEWS_BIRTHDAYREMINDER_SOURCE)
 	{
-		//Zapisywanie informacji o aktywnosci zrodla
-		TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
-		Ini->WriteBool("Settings","SourceActive",lParam);
-		delete Ini;
 		//Odzaczenie aktywnosci zrodla
 		SourceActiveChk = lParam;
-		//Odswiezenie wszystkich zrodel
-		if(SourceActiveChk) PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
+		//Zapisywanie informacji o aktywnosci zrodla
+		TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
+		Ini->WriteBool("Settings","SourceActive",SourceActiveChk);
+		delete Ini;
 	}
 
 	return 0;
@@ -352,11 +350,11 @@ INT_PTR __stdcall OnNewsDelete(WPARAM wParam, LPARAM lParam)
 		//Zapisywanie informacji o usunieciu zrodla
 		TIniFile *Ini = new TIniFile(GetPluginUserDir()+"\\\\BirthdayReminder\\\\Settings.ini");
 		Ini->WriteBool("Settings","SourceAdded",false);
-		Ini->WriteBool("Settings","SourceActive",true);
+		Ini->WriteBool("Settings","SourceActive",false);
 		delete Ini;
 		//Odzaczenie usuniecia zrodla
 		SourceAddedChk = false;
-		SourceActiveChk = true;
+		SourceActiveChk = false;
 		//Usuwanie elementu z listy zrodel powiadomien
 		DestroyNewsDataItem();
 	}
