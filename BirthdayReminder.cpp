@@ -50,7 +50,8 @@ DWORD ReplyListID = 0;
 //LISTA-KONTAKTOW-&-LISTA-NICKOW---------------------------------------------
 TStringList* ContactList = new TStringList;
 TCustomIniFile* ContactsNickList = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
-TStringList* ContactNickList = new TStringList;
+TMemIniFile* SiblingsList = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
+TStringList* SourceContactsList = new TStringList;
 //GDY-ZOSTALO-URUCHOMIONE-WYLADOWANIE-WTYCZKI-WRAZ-Z-ZAMKNIECIEM-KOMUNIKATORA
 bool ForceUnloadExecuted = false;
 //SETTINGS-------------------------------------------------------------------
@@ -278,6 +279,37 @@ INT_PTR __stdcall OnContactsUpdate(WPARAM wParam, LPARAM lParam)
 		if(ContactList->IndexOf(JID)==-1) ContactList->Add(JID);
 		//Pobieranie i zapisywanie nicku kontatku
 		ContactsNickList->WriteString("Nick",JID,(wchar_t*)ContactsUpdateContact.Nick);
+		//Odczyt pliku INI kontaktu
+		TIniFile *Ini = new TIniFile(GetContactsUserDir()+JID+".ini");
+		//Odczyt informacji o metakontakcie
+		UnicodeString MetaParent = DecodeBase64(Ini->ReadString("Buddy", "MetaParent", ""));
+		MetaParent = MetaParent.Trim();
+		//Zamkniecie pliku INI kontaktu
+		delete Ini;
+		//Kontakt jest metakontaktem
+		if(!MetaParent.IsEmpty())
+		{
+			//Zapis podstawowej zaleznosci
+			SiblingsList->WriteBool(JID,MetaParent,true);
+			SiblingsList->WriteBool(MetaParent,JID,true);
+			//Zapis rozszerzonej zaleznosci
+			//Odczyt metakontaktow
+			TStringList *Siblings = new TStringList;
+			SiblingsList->ReadSection(MetaParent,Siblings);
+			//Pobieranie ilosci metakontaktow
+			int SiblingsCount = Siblings->Count;
+			//Petla zapisywania rozszerzonej zaleznosci
+			for(int Count=0;Count<SiblingsCount;Count++)
+			{
+				if(Siblings->Strings[Count]!=JID)
+				{
+					SiblingsList->WriteBool(Siblings->Strings[Count],JID,true);
+					SiblingsList->WriteBool(JID,Siblings->Strings[Count],true);
+				}
+			}
+			//Usuniecie listy metakontaktow
+			delete Siblings;
+		}
 	}
 
 	return 0;
@@ -368,8 +400,8 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 	{
 		//Informacja o rozpoczeciu pobierania danych
 		PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_FETCHSTART, wParam, 0);
-		//Czyszczenie listy metakontatkow
-		ContactNickList->Clear();
+		//Czyszczenie listy kontaktow do blokowania ponownego pokazania metakontaktow
+		SourceContactsList->Clear();
 		//Pobieranie i rozkodowanie aktualnej daty
 		unsigned short tYear=0,tMonth=0,tDay=0;
 		TDateTime Todey = TDateTime::CurrentDate();
@@ -414,10 +446,22 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 						if((InBirthDayChk)&&(Difference==0))
 						{
 							//Powiadomienie dla kontatku nie bylo wywolywane
-							if(ContactNickList->IndexOf(GetContactNick(ContactList->Strings[Count]))==-1)
+							if(SourceContactsList->IndexOf(ContactList->Strings[Count])==-1)
 							{
-								//Dodawanie pseudonimu kontatku do listy
-								ContactNickList->Add(GetContactNick(ContactList->Strings[Count]));
+								//Dodawanie kontatku do listy
+								SourceContactsList->Add(ContactList->Strings[Count]);
+								//Odczyt metakontaktow
+								TStringList *Siblings = new TStringList;
+								SiblingsList->ReadSection(ContactList->Strings[Count],Siblings);
+								//Pobieranie ilosci metakontaktow
+								int SiblingsCount = Siblings->Count;
+								//Kontakt zawiera metakontakty
+								if(SiblingsCount)
+								{
+									//Dodawanie metakontaktow do listy
+									for(int Count=0;Count<SiblingsCount;Count++)
+										SourceContactsList->Add(Siblings->Strings[Count]);
+								}
 								//Wypelnienie struktury
 								TPluginNewsItem PluginNewsItem;
 								//Data powiadomienia
@@ -473,10 +517,22 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 						else if(((AnotherDayChk==1)&&(Difference==1))||((AnotherDayChk==2)&&(Difference==2))||((AnotherDayChk==3)&&(Difference==3))||((AnotherDayChk==4)&&(Difference==4))||((AnotherDayChk==5)&&(Difference==5))||((AnotherDayChk==6)&&(Difference==6))||((AnotherDayChk==7)&&(Difference==7))||((AnotherDayChk==8)&&(Difference==14)))
 						{
 							//Powiadomienie dla kontatku nie bylo wywolywane
-							if(ContactNickList->IndexOf(GetContactNick(ContactList->Strings[Count]))==-1)
+							if(SourceContactsList->IndexOf(ContactList->Strings[Count])==-1)
 							{
-								//Dodawanie pseudonimu kontatku do listy
-								ContactNickList->Add(GetContactNick(ContactList->Strings[Count]));
+								//Dodawanie kontatku do listy
+								SourceContactsList->Add(ContactList->Strings[Count]);
+								//Odczyt metakontaktow
+								TStringList *Siblings = new TStringList;
+								SiblingsList->ReadSection(ContactList->Strings[Count],Siblings);
+								//Pobieranie ilosci metakontaktow
+								int SiblingsCount = Siblings->Count;
+								//Kontakt zawiera metakontakty
+								if(SiblingsCount)
+								{
+									//Dodawanie metakontaktow do listy
+									for(int Count=0;Count<SiblingsCount;Count++)
+										SourceContactsList->Add(Siblings->Strings[Count]);
+								}
 								//Ustalanie dnia urodzin
 								TDateTime DiffBirthDay = EncodeDate(tYear,StrToInt(ContactMonth),StrToInt(ContactDay));
 								UnicodeString BirthDayName = DiffBirthDay.FormatString("dddd");
@@ -562,6 +618,37 @@ INT_PTR __stdcall OnReplyList(WPARAM wParam, LPARAM lParam)
 			if(ContactList->IndexOf(JID)==-1) ContactList->Add(JID);
 			//Pobieranie i zapisywanie nicku kontatku
 			ContactsNickList->WriteString("Nick",JID,(wchar_t*)ReplyListContact.Nick);
+			//Odczyt pliku INI kontaktu
+			TIniFile *Ini = new TIniFile(GetContactsUserDir()+JID+".ini");
+			//Odczyt informacji o metakontakcie
+			UnicodeString MetaParent = DecodeBase64(Ini->ReadString("Buddy", "MetaParent", ""));
+			MetaParent = MetaParent.Trim();
+			//Zamkniecie pliku INI kontaktu
+			delete Ini;
+			//Kontakt jest metakontaktem
+			if(!MetaParent.IsEmpty())
+			{
+				//Zapis podstawowej zaleznosci
+				SiblingsList->WriteBool(JID,MetaParent,true);
+				SiblingsList->WriteBool(MetaParent,JID,true);
+				//Zapis rozszerzonej zaleznosci
+				//Odczyt metakontaktow
+				TStringList *Siblings = new TStringList;
+				SiblingsList->ReadSection(MetaParent,Siblings);
+				//Pobieranie ilosci metakontaktow
+				int SiblingsCount = Siblings->Count;
+				//Petla zapisywania rozszerzonej zaleznosci
+				for(int Count=0;Count<SiblingsCount;Count++)
+				{
+					if(Siblings->Strings[Count]!=JID)
+					{
+						SiblingsList->WriteBool(Siblings->Strings[Count],JID,true);
+						SiblingsList->WriteBool(JID,Siblings->Strings[Count],true);
+					}
+				}
+				//Usuniecie listy metakontaktow
+				delete Siblings;
+			}
 		}
 	}
 
