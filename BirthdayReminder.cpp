@@ -299,6 +299,8 @@ INT_PTR __stdcall OnLangCodeChanged(WPARAM wParam, LPARAM lParam)
 	//Aktualizacja lokalizacji form wtyczki
 	for(int i=0;i<Screen->FormCount;i++)
 		LangForm(Screen->Forms[i]);
+	//Odswiezenie wszystkich zrodel
+	PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
 
 	return 0;
 }
@@ -789,6 +791,8 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 		PluginLink.CallService(AQQ_CONTACTS_REQUESTLIST,(WPARAM)ReplyListID,0);
 		//Sprawdzenie czy wtyczka zostala dodana do zrodel powiadomien
 		if(SourceAddedChk) BuildNewsDataItem();
+		//Odswiezenie wszystkich zrodel
+		PluginLink.CallService(AQQ_SYSTEM_NEWSSOURCE_REFRESH, 0, 0);
 	}
 
 	return 0;
