@@ -1,3 +1,11 @@
+3.3.0.0
+-----
+* Obs³uga lokalizacji (polskiej i angielskiej).
+* Pe³ne wsparcie kolorystyki stylizacji okien.
+* Obs³uga metakontaktów.
+* Drobne poprawki w kodzie. 
+* Aktualizacja komponentów AlphaControls do nowszej wersji (9.19).
+
 3.2.2.0
 -----
 * Nieskórkowanie systemowych okien dialogowych niepochodz¹cych z wtyczki.
