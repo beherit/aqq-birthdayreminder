@@ -25,6 +25,7 @@
 #include <time.h>
 #include <IdHashMessageDigest.hpp>
 #include <PluginAPI.h>
+#include <LangAPI.hpp>
 #pragma hdrstop
 #include "SettingsFrm.h"
 
@@ -60,6 +61,7 @@ int AnotherDayChk;
 //FORWARD-AQQ-HOOKS----------------------------------------------------------
 INT_PTR __stdcall OnBeforeUnload(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnContactsUpdate(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnLangCodeChanged(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnNewsActive(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall OnNewsDelete(WPARAM wParam, LPARAM lParam);
@@ -279,6 +281,29 @@ INT_PTR __stdcall OnContactsUpdate(WPARAM wParam, LPARAM lParam)
 }
 //---------------------------------------------------------------------------
 
+//Hook na zmiane lokalizacji
+INT_PTR __stdcall OnLangCodeChanged(WPARAM wParam, LPARAM lParam)
+{
+	//Czyszczenie cache lokalizacji
+	ClearLngCache();
+	//Pobranie sciezki do katalogu prywatnego uzytkownika
+	UnicodeString PluginUserDir = GetPluginUserDir();
+	//Ustawienie sciezki lokalizacji wtyczki
+	UnicodeString LangCode = (wchar_t*)lParam;
+	LangPath = PluginUserDir + "\\\\Languages\\\\BirthdayReminder\\\\" + LangCode + "\\\\";
+	if(!DirectoryExists(LangPath))
+	{
+		LangCode = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETDEFLANGCODE,0,0);
+		LangPath = PluginUserDir + "\\\\Languages\\\\BirthdayReminder\\\\" + LangCode + "\\\\";
+	}
+	//Aktualizacja lokalizacji form wtyczki
+	for(int i=0;i<Screen->FormCount;i++)
+		LangForm(Screen->Forms[i]);
+
+	return 0;
+}
+//---------------------------------------------------------------------------
+
 //Hook na zaladowanie wszystkich modulow
 INT_PTR __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam)
 {
@@ -346,7 +371,7 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 		//Czyszczenie listy metakontatkow
 		ContactNickList->Clear();
 		//Pobieranie i rozkodowanie aktualnej daty
-		Word tYear=0,tMonth=0,tDay=0;
+		unsigned short tYear=0,tMonth=0,tDay=0;
 		TDateTime Todey = TDateTime::CurrentDate();
 		DecodeDate(Todey, tYear, tMonth, tDay);
 		//Sprawdzanie wszystkich kontatkow z listy
@@ -356,14 +381,13 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 			TIniFile *Ini = new TIniFile(GetContactsUserDir()+ContactList->Strings[Count]+".ini");
 			UnicodeString ContactBirthDay = DecodeBase64(Ini->ReadString("Buddy", "Birth", "A==="));
 			delete Ini;
+			//Usuwanie spacji
 			ContactBirthDay = ContactBirthDay.Trim();
 			//Odkodowanie daty
 			try
 			{
 				if(ContactBirthDay.Pos("-"))
 				{
-					//Usuwanie spacji
-					ContactBirthDay = ContactBirthDay.Trim();
 					//Wyciagniecie roku urodzin
 					UnicodeString ContactYear = ContactBirthDay;
 					ContactYear = ContactYear.Delete(ContactYear.Pos("-"),ContactYear.Length());
@@ -401,6 +425,11 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 								//Tytul powiadomienia
 								UnicodeString Title = GetContactNick(ContactList->Strings[Count]).w_str();
 								PluginNewsItem.Title = Title.w_str();
+								//Ustalanie tekstu powiadomienia
+								UnicodeString Text = GetLangStr("Birthday");
+                Text = StringReplace(Text, "CC_NICK", GetContactNick(ContactList->Strings[Count]), TReplaceFlags());
+								Text = StringReplace(Text, "CC_COUNT", IntToStr(tYear-cYear), TReplaceFlags());
+								Text = StringReplace(Text, "CC_JID", ContactList->Strings[Count], TReplaceFlags());
 								//Zrodlo powiadomienia
 								UnicodeString Source = ContactList->Strings[Count];
 								PluginNewsItem.Source = Source.w_str();
@@ -422,20 +451,20 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 										//Zmiana znakow w adresie awatara
 										Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
 										//Tresc powiadomienia
-										UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi dziœ "+IntToStr(tYear-cYear)+" urodziny! Nie czekaj i <a href=\"xmpp:"+ContactList->Strings[Count]+"\">z³ó¿ ¿yczenia</a>!</div>";
+										UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+Text+"</div>";
 										PluginNewsItem.News = News.w_str();
 									}
 									//Tresc powiadomienia bez awatara
 									else
 									{
-										UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi dziœ "+IntToStr(tYear-cYear)+" urodziny! Nie czekaj i <a href=\"xmpp:"+ContactList->Strings[Count]+"\">z³ó¿ ¿yczenia</a>!</div>";
+										UnicodeString News = "<div class=\"fb_content\">"+Text+"</div>";
 										PluginNewsItem.News = News.w_str();
 									}
 								}
 								//Tresc powiadomienia bez awatara
 								else
 								{
-									UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi dziœ "+IntToStr(tYear-cYear)+" urodziny! Nie czekaj i <a href=\"xmpp:"+ContactList->Strings[Count]+"\">z³ó¿ ¿yczenia</a>!</div>";
+									UnicodeString News = "<div class=\"fb_content\">"+Text+"</div>";
 									PluginNewsItem.News = News.w_str();
 								}
 								//Wewnetrzne ID powiadomienia
@@ -452,16 +481,6 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 							{
 								//Dodawanie pseudonimu kontatku do listy
 								ContactNickList->Add(GetContactNick(ContactList->Strings[Count]));
-								//Ustalanie tekstu powiadomienia
-								UnicodeString Text;
-								if(AnotherDayChk==1) Text = "jutro";
-								else if(AnotherDayChk==2) Text = "za dwa dni";
-								else if(AnotherDayChk==3) Text = "za trzy dni";
-								else if(AnotherDayChk==4) Text = "za cztery dni";
-								else if(AnotherDayChk==5) Text = "za piêæ dni";
-								else if(AnotherDayChk==6) Text = "za szeœæ dni";
-								else if(AnotherDayChk==7) Text = "za tydzieñ";
-								else if(AnotherDayChk==8) Text = "za dwa tygodnie";
 								//Ustalanie dnia urodzin
 								TDateTime DiffBirthDay = EncodeDate(tYear,StrToInt(ContactMonth),StrToInt(ContactDay));
 								UnicodeString BirthDayName = DiffBirthDay.FormatString("dddd");
@@ -472,6 +491,12 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 								//Tytul powiadomienia
 								UnicodeString Title = GetContactNick(ContactList->Strings[Count]).w_str();
 								PluginNewsItem.Title = Title.w_str();
+								//Ustalanie tekstu powiadomienia
+								UnicodeString Text = GetLangStr("Days"+IntToStr(AnotherDayChk));
+								Text = StringReplace(Text, "CC_NICK", GetContactNick(ContactList->Strings[Count]), TReplaceFlags());
+								Text = StringReplace(Text, "CC_DAY", BirthDayName, TReplaceFlags());
+								Text = StringReplace(Text, "CC_DATE", ContactDay+"."+ContactMonth, TReplaceFlags());
+								Text = StringReplace(Text, "CC_COUNT", IntToStr(tYear-cYear), TReplaceFlags());
 								//Zrodlo powiadomienia
 								UnicodeString Source = ContactList->Strings[Count];
 								PluginNewsItem.Source = Source.w_str();
@@ -493,20 +518,20 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 										//Zmiana znakow w adresie awatara
 										Avatar = StringReplace(Avatar, "\\\\", "/", TReplaceFlags() << rfReplaceAll);
 										//Tresc powiadomienia
-										UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" ("+BirthDayName+", "+ContactDay+"."+ContactMonth+") "+IntToStr(tYear-cYear)+" urodziny!</div>";
+										UnicodeString News = "<div class=\"fb_content\"><img src=\"file:///"+Avatar+"\" class=\"fb_userpic\">"+Text+"</div>";
 										PluginNewsItem.News = News.w_str();
 									}
 									//Tresc powiadomienia bez awatara
 									else
 									{
-										UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" ("+BirthDayName+", "+ContactDay+"."+ContactMonth+") "+IntToStr(tYear-cYear)+" urodziny!</div>";
+										UnicodeString News = "<div class=\"fb_content\">"+Text+"</div>";
 										PluginNewsItem.News = News.w_str();
 									}
 								}
 								//Tresc powiadomienia bez awatara
 								else
 								{
-									UnicodeString News = "<div class=\"fb_content\">"+GetContactNick(ContactList->Strings[Count])+" obchodzi "+Text+" ("+BirthDayName+", "+ContactDay+"."+ContactMonth+") "+IntToStr(tYear-cYear)+" urodziny!</div>";
+									UnicodeString News = "<div class=\"fb_content\">"+Text+"</div>";
 									PluginNewsItem.News = News.w_str();
 								}
 								//Wewnetrzne ID powiadomienia
@@ -708,6 +733,44 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 	PluginLink = *Link;
 	//Pobranie sciezki do katalogu prywatnego uzytkownika
 	UnicodeString PluginUserDir = GetPluginUserDir();
+  //Tworzenie katalogow lokalizacji
+	if(!DirectoryExists(PluginUserDir+"\\\\Languages"))
+		CreateDir(PluginUserDir+"\\\\Languages");
+	if(!DirectoryExists(PluginUserDir+"\\\\Languages\\\\BirthdayReminder"))
+		CreateDir(PluginUserDir+"\\\\Languages\\\\BirthdayReminder");
+	if(!DirectoryExists(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\EN"))
+		CreateDir(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\EN");
+	if(!DirectoryExists(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\PL"))
+		CreateDir(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\PL");
+	//Wypakowanie plikow lokalizacji
+	//81011FF783D47CDEF526FB9D52DB4698
+	if(!FileExists(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\EN\\\\Const.lng"))
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\EN\\\\Const.lng").w_str(),L"EN_CONST",L"DATA");
+	else if(MD5File(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\EN\\\\Const.lng")!="81011FF783D47CDEF526FB9D52DB4698")
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\EN\\\\Const.lng").w_str(),L"EN_CONST",L"DATA");
+	//B6B0E733A914E123973A44133E14D649
+	if(!FileExists(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\EN\\\\TSettingsForm.lng"))
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\EN\\\\TSettingsForm.lng").w_str(),L"EN_SETTINGSFRM",L"DATA");
+	else if(MD5File(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\EN\\\\TSettingsForm.lng")!="B6B0E733A914E123973A44133E14D649")
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\EN\\\\TSettingsForm.lng").w_str(),L"EN_SETTINGSFRM",L"DATA");
+	//F915FF27C2602CA507D1B52A7EEC9996
+	if(!FileExists(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\PL\\\\Const.lng"))
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\PL\\\\Const.lng").w_str(),L"PL_CONST",L"DATA");
+	else if(MD5File(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\PL\\\\Const.lng")!="F915FF27C2602CA507D1B52A7EEC9996")
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\PL\\\\Const.lng").w_str(),L"PL_CONST",L"DATA");
+	//6B66D8D6D133948041302E7B34F83EC0
+	if(!FileExists(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\PL\\\\TSettingsForm.lng"))
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\PL\\\\TSettingsForm.lng").w_str(),L"PL_SETTINGSFRM",L"DATA");
+	else if(MD5File(PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\PL\\\\TSettingsForm.lng")!="6B66D8D6D133948041302E7B34F83EC0")
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\BirthdayReminder\\\\PL\\\\TSettingsForm.lng").w_str(),L"PL_SETTINGSFRM",L"DATA");
+	//Ustawienie sciezki lokalizacji wtyczki
+	UnicodeString LangCode = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETLANGCODE,0,0);
+	LangPath = PluginUserDir + "\\\\Languages\\\\BirthdayReminder\\\\" + LangCode + "\\\\";
+	if(!DirectoryExists(LangPath))
+	{
+		LangCode = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETDEFLANGCODE,0,0);
+		LangPath = PluginUserDir + "\\\\Languages\\\\BirthdayReminder\\\\" + LangCode + "\\\\";
+	}
 	//Tworzeniu z ustawieniami wtyczki
 	if(!DirectoryExists(PluginUserDir + "\\\\BirthdayReminder"))
 		CreateDir(PluginUserDir + "\\\\BirthdayReminder");
@@ -733,6 +796,8 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 	PluginLink.HookEvent(AQQ_SYSTEM_BEFOREUNLOAD,OnBeforeUnload);
 	//Hook na zmianê stanu kontaktu
 	PluginLink.HookEvent(AQQ_CONTACTS_UPDATE,OnContactsUpdate);
+	//Hook na zmiane lokalizacji
+	PluginLink.HookEvent(AQQ_SYSTEM_LANGCODE_CHANGED,OnLangCodeChanged);
 	//Hook na zaladowanie wszystkich modulow
 	PluginLink.HookEvent(AQQ_SYSTEM_MODULESLOADED,OnModulesLoaded);
 	//Hook na zmiane stanu aktywnosci zrodla przez usera
@@ -768,6 +833,7 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Unload()
 	//Wyladowanie wszystkich hookow
 	PluginLink.UnhookEvent(OnBeforeUnload);
 	PluginLink.UnhookEvent(OnContactsUpdate);
+	PluginLink.UnhookEvent(OnLangCodeChanged);
 	PluginLink.UnhookEvent(OnModulesLoaded);
 	PluginLink.UnhookEvent(OnNewsActive);
 	PluginLink.UnhookEvent(OnNewsDelete);
