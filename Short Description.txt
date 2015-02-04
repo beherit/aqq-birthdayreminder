@@ -1,1 +1,4 @@
-Wtyczka powiadamia, poprzez centrum powiadomieñ, o obchodzeniu urodzin kontaktów z naszej listy. Do poprawnego dzia³ania wtyczki niezbêdne jest, aby data urodzin by³a zapisana w wizytówce w postaci RRRR-MM-DD.
+PL:
+Powiadamia, poprzez centrum powiadomieñ, o urodzinach kontaktów z naszej listy. Do poprawnego dzia³ania wtyczki niezbêdne jest, aby data urodzin by³a zapisana w wizytówce w postaci RRRR-MM-DD.
+EN:
+Notifies, through the notifications center, about the birthday of contacts from our list. For proper operation of the plugin, it's necessary that the date of birth must saved in vcard in the form YYYY-MM-DD.
