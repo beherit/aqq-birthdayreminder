@@ -469,7 +469,7 @@ INT_PTR __stdcall OnNewsFetch(WPARAM wParam, LPARAM lParam)
 								PluginNewsItem.Title = Title.w_str();
 								//Ustalanie tekstu powiadomienia
 								UnicodeString Text = GetLangStr("Birthday");
-                Text = StringReplace(Text, "CC_NICK", GetContactNick(ContactList->Strings[Count]), TReplaceFlags());
+								Text = StringReplace(Text, "CC_NICK", GetContactNick(ContactList->Strings[Count]), TReplaceFlags());
 								Text = StringReplace(Text, "CC_COUNT", IntToStr(tYear-cYear), TReplaceFlags());
 								Text = StringReplace(Text, "CC_JID", ContactList->Strings[Count], TReplaceFlags());
 								//Zrodlo powiadomienia
